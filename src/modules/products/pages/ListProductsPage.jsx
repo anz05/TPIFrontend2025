@@ -6,8 +6,8 @@ import { getProducts } from '../services/list';
 
 const productStatus = {
   ALL: 'all',
-  ENABLED: 'enabled',
-  DISABLED: 'disabled',
+  ENABLED: 'active',   
+  DISABLED: 'inactive',   
 };
 
 function ListProductsPage() {
@@ -30,8 +30,8 @@ function ListProductsPage() {
 
       if (error) throw error;
 
-      setTotal(data.total);
-      setProducts(data.productItems);
+    setTotal(data.total ?? data.totalCount ?? 0);
+    setProducts(data.productItems ?? data.products ?? []);
     } catch (error) {
       console.error(error);
     } finally {

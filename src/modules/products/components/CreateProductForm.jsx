@@ -27,8 +27,18 @@ function CreateProductForm() {
   const navigate = useNavigate();
 
   const onValid = async (formData) => {
+    
     try {
-      await createProduct(formData);
+    const payload = {
+      sku: `SKU-${formData.sku}`,
+      internalCode: `INT-${formData.cui}`,
+      name: formData.name,
+      description: formData.description,
+      currentUnitPrice: Number(formData.price),
+      stockQuantity: Number(formData.stock),   
+    };
+      
+      await createProduct(payload);
 
       navigate('/admin/products');
     } catch (error) {

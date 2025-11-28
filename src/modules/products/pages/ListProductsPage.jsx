@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../shared/components/Button';
 import Card from '../../shared/components/Card';
+import CardContent from '../../shared/components/CardContent';
 import { getProducts } from '../services/list';
 
 const productStatus = {
@@ -58,6 +59,7 @@ function ListProductsPage() {
           <h1 className='text-3xl'>Productos</h1>
           <Button
             className='h-11 w-11 rounded-2xl sm:hidden'
+            onClick={() => navigate('/admin/products/create')}
           >
             <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 11C4.44772 11 4 10.5523 4 10C4 9.44772 4.44772 9 5 9H15C15.5523 9 16 9.44772 16 10C16 10.5523 15.5523 11 15 11H5Z" fill="#000000"></path> <path d="M9 5C9 4.44772 9.44772 4 10 4C10.5523 4 11 4.44772 11 5V15C11 15.5523 10.5523 16 10 16C9.44772 16 9 15.5523 9 15V5Z" fill="#000000"></path> </g></svg>
           </Button>
@@ -92,10 +94,14 @@ function ListProductsPage() {
           loading
             ? <span>Buscando datos...</span>
             : products.map(product => (
-              <Card key={product.sku}>
-                <h1>{product.sku} - {product.name}</h1>
-                <p className='text-base'>Stock: {product.stockQuantity} - ${product.currentUnitPrice} - {product.isActive ? 'Activado' : 'Desactivado'}</p>
-              </Card>
+              <CardContent
+                key={product.sku}
+                props={{
+                  header:`${product.sku} - ${product.name}`, 
+                  description:`Stock: ${product.stockQuantity} - $${product.currentUnitPrice} - ${product.isActive ? 'Activado' : 'Desactivado'}`, 
+                  button:'Ver'
+                }}
+              />
             ))
         }
       </div>

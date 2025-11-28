@@ -8,10 +8,12 @@ function Button({ children, type = 'button', variant = 'default', ...restProps }
     secondary: 'bg-gray-100 hover:bg-gray-200 transition',
   };
 
+  const extraClass = restProps.className || '';
+
   return (
     <button
       {...restProps}
-      className={`${variantStyle[variant]} ${restProps.className}`}
+      className={`${variantStyle[variant]} ${extraClass}`.trim()}
       type={type}
     >
       {children}

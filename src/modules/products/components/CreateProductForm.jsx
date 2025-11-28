@@ -21,6 +21,7 @@ function CreateProductForm() {
       price: 0,
       stock: 0,
     },
+    resetOptions: { keepDirtyValues: false , keepErrors: true },
   });
 
   const [errorBackendMessage, setErrorBackendMessage] = useState('');

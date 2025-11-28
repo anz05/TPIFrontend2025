@@ -1,4 +1,6 @@
-export const listOrders = async () => {
+
+import { instance } from '../../shared/api/axiosInstance';
+export const getOrders = async () => {
   const response = await fetch('/api/orders', {
     method: 'GET',
     headers: {
@@ -17,3 +19,5 @@ export const listOrders = async () => {
     return { data: null, error };
   }
 };
+
+

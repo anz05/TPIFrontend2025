@@ -13,14 +13,59 @@ import Counter from '../../shared/components/Counter';
 function ListGeneralProductsPage() {
     const navigate = useNavigate();
 
-    const [ searchTerm, setSearchTerm ] = useState('');
-    const [ pageNumber, setPageNumber ] = useState(1);
-    const [ pageSize, setPageSize ] = useState(10);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [pageNumber, setPageNumber] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
 
-    const [ total, setTotal ] = useState(0);
-    const [ products, setProducts ] = useState([]);
+    const [total, setTotal] = useState(0);
+    const [products, setProducts] = useState([]);
 
     const [loading, setLoading] = useState(false);
+
+    const [selectedQuantities, setSelectedQuantities] = useState({});
+
+    const handleCountChange = (sku, count) => {
+        setSelectedQuantities(prev => ({
+            ...prev,
+            [sku]: count,
+        }));
+    };
+
+    const handleAddToCart = (product) => {
+        const currentCount = selectedQuantities[product.sku] || 0;
+        if (currentCount < 1) {
+            alert('Debes agregar al menos 1 producto.');
+            return;
+        }
+        let cart = [];
+        try {
+            const storedCart = localStorage.getItem('cart');
+            if (storedCart) {
+                cart = JSON.parse(storedCart);
+            }
+        } catch (error) {
+            console.error('Error al leer el carrito de localStorage:', error);
+        }
+        const newCartItem = {
+            sku: product.sku,
+            name: product.name,
+            unitPrice: product.currentUnitPrice,
+            quantity: currentCount,
+        };
+        const existingIndex = cart.findIndex(item => item.sku === product.sku);
+
+        if (existingIndex > -1) {
+            cart[existingIndex].quantity = currentCount; 
+        } else {
+            cart.push(newCartItem);
+        }
+        try {
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert(`${currentCount} unidades de ${product.name} añadidas al carrito!`);
+        } catch (error) {
+            console.error('Error al guardar el carrito en localStorage:', error);
+        }
+    };
 
     const fetchProducts = async () => {
         try {
@@ -60,61 +105,41 @@ function ListGeneralProductsPage() {
 
     return (
         <div>
-        <header
-        className="
-            bg-white border border-gray-300 p-4 rounded-xl">
-            <div
-                className='flex justify-between items-center mb-3'
-                >
-                <img src={logo} alt="Logo" width="200" />
-                <Button onClick={() => navigate('/')}>Productos</Button>
-                <Button onClick={() => navigate('/cart')}>Carrito</Button>
-                <div className='flex flex-col sm:flex-row gap-4'>
-                    <div
-                        className='flex items-center gap-3'
-                    >
-                        <input value={searchTerm} onChange={(evt) => setSearchTerm(evt.target.value)} type="text" placeholder='Buscar' className='text-[1.3rem] w-full' />
-                        <Button className='h-11 w-11' onClick={handleSearch}>
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>
-                        </Button>
-                    </div>
-                </div>  
-                <Button onClick={() => navigate('/login')}>Iniciar sesión</Button>
-                <Button onClick={() => navigate('/signup')}>Registrarse</Button>
-            </div>
-        </header>
-
-        <div className='grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-4 gap-4 p-4'>
+            <div className='grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-4 gap-4 p-4'>
             {
             loading
                 ? <span>Buscando datos...</span>
                 : products.map(product => (
-                    // <ProductCard key ={product.sku}
-                    //     image={image}
-                    //     name={product.name}
-                    //     currentUnitPrice={product.currentUnitPrice}
-                    //     stock={product.stockQuantity}
-                    // />
                     <StructuredCard 
                         key={product.sku} 
                         className="flex flex-col"
                         content={
                             <>
                                 <img src={image} alt={product.name} className="w-full h-48 object-cover" />
-                                <p className="mt-2 font-semibold">{product.name}</p>
-                                <p className="mt-1 text-lg font-bold">${product.currentUnitPrice}</p>
+                                
                             </>
                         }
                         actions={
                             <>
-                                <Counter stock={product.stockQuantity} />
-                                <Button>Agregar</Button>
+                                <p className="mt-2 font-semibold">{product.name}</p>
+                                <p className="mt-1 text-lg font-bold">${product.currentUnitPrice}</p>
+                                {/* 7. Pasar la función callback al Counter */}
+                                <Counter 
+                                    stock={product.stockQuantity} 
+                                    onCountChange={(count) => handleCountChange(product.sku, count)}
+                                />
+                                {/* 8. Llamar a handleAddToCart con los datos del producto al hacer clic */}
+                                <Button onClick={() => handleAddToCart(product)}>
+                                    Agregar
+                                </Button>
                             </>
                         }
+                        contentClassName='bg-gray-100 p-4'
+                        actionsClassName="flex flex-col flex-wrap mt-3"
                     ></StructuredCard>
                 ))
             }
-        </div>
+            </div>
 
         <div className='flex justify-center items-center mt-3'>
             <button

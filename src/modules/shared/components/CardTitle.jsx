@@ -1,11 +1,9 @@
 import React from 'react';
-import Card from './Card';
-import Button from './Button';
 
-function CardTitle({ children }) {
+function CardTitle({ children, className }) {
   return (
-    <div>
-        <h1 className="text-xl font-bold">{children}</h1>
+    <div className={`${className}`}> 
+      <h1 className="text-xl font-bold">{children}</h1>
     </div>
   );
 };

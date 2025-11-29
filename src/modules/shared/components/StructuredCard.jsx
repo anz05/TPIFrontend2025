@@ -2,15 +2,24 @@ import React from 'react';
 import CardTitle from './CardTitle';
 import CardContent from './CardContent';
 import CardActions from './CardActions';
+import Card from './Card';
 
-function StructuredCard({ title, content, actions, className }) {
+function StructuredCard({ 
+    title, 
+    content, 
+    actions, 
+    className, 
+    titleClassName, 
+    contentClassName, 
+    actionsClassName,
+    ...rest 
+}) {
   return (
-    <div className={`bg-white border border-gray-300 p-4 rounded-xl ${className}`}>
-      {/* Pasa el contenido específico al componente correcto */}
-      {title && <CardTitle>{title}</CardTitle> }
-      <CardContent>{content}</CardContent>
-      {actions && <CardActions>{actions}</CardActions>}
-    </div>
+    <Card className={`${className}`} {...rest}> 
+      {title && <CardTitle className={titleClassName}>{title}</CardTitle> } 
+      <CardContent className={contentClassName}>{content}</CardContent>
+      {actions && <CardActions className={actionsClassName}>{actions}</CardActions>}
+    </Card>
   );
 };
 

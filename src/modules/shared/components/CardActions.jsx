@@ -1,13 +1,11 @@
+// CardActions.jsx
 import React from 'react';
-import Card from './Card';
-import Button from './Button';
 
-function CardActions({ children }) {
+function CardActions({ children, className }) { 
   return (
-    <div>
+    <div className={`${className}`}> 
       {children}
-      {/* <Button className='flex-shrink-0 px-3 py-1 text-sm'>{props.button}</Button> */}
-    </div>    
+    </div>
   );
 };
 

@@ -1,28 +1,9 @@
-// import Card from '../../shared/components/Card';
-
-// function Home() {
-
-//   return (
-//     <div
-//       className='flex flex-col gap-3 sm:grid sm:grid-cols-2'
-//     >
-//       <Card>
-//         <h3>Productos</h3>
-//         <p>Cantidad: #</p>
-//       </Card>
-
-//       <Card>
-//         <h3>Ordenes</h3>
-//         <p>Cantidad: #</p>
-//       </Card>
-//     </div>
-//   );
-// };
-
-// export default Home;
 import { useEffect, useState } from 'react';
 import Card from '../../shared/components/Card';
 import { getProductsCount } from '../../products/services/list';
+import StructuredCard from '../../shared/components/StructuredCard';
+import CardTitle from '../../shared/components/CardTitle';
+import CardContent from '../../shared/components/CardContent';
 
 function Home() {
 
@@ -50,15 +31,22 @@ function Home() {
 
     return (
         <div className='flex flex-col gap-3 sm:grid sm:grid-cols-2'>
-            <Card>
-                <h3>Productos</h3>
-                <p>Cantidad: {loading ? 'Cargando...' : productsCount}</p>
-            </Card>
-
-            <Card>
-                <h3>Órdenes</h3>
-                <p>Cantidad: {loading ? 'Cargando...' : ordersCount}</p>
-            </Card>
+            <StructuredCard
+                title='Productos'
+                content={
+                    <p className="text-sm text-gray-500 mt-1">
+                        {loading ? 'Cargando...' :`Cantidad de productos: ${productsCount}`}
+                    </p>}
+            >
+            </StructuredCard>
+            <StructuredCard
+                title='Órdenes'
+                content={
+                    <p className='text-sm text-gray-500 mt-1'>
+                        {loading ? 'Cargando...' : `Cantidad de ordenes: ${ordersCount}`}
+                    </p>
+                }>
+            </StructuredCard>
         </div>
     );
 }

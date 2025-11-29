@@ -105,15 +105,24 @@ function ListProductsPage() {
               // />
               <StructuredCard
                 key={product.sku}
-                className="flex flex-col"
+                //className="flex flex-row justify-between items-center flex-wrap"
+                className='grid grid-rows-2 gap-2 hover:bg-gray-50'
                 title = {`${product.sku} - ${product.name}`}
                 content={
                   <>Stock: {product.stockQuantity} - ${product.currentUnitPrice} - {product.isActive ? 'Activado' : 'Desactivado'}
                   </>
+                // }
+                // {...(!mobile ? { 
+                //     actions: (
+                //         <>
+                //             <Button>Ver</Button>
+                //         </>
+                //     )
+                // } : {})
                 }
                 actions={
                   <>
-                    <Button onClick={() => navigate(`/admin/products/${product.sku}`)}>Ver</Button>
+                    <Button>Ver</Button>
                   </>
                 }
               ></StructuredCard>

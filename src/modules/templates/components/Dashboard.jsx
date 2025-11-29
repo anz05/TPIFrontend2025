@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import useAuth from '../../auth/hook/useAuth';
 import Button from '../../shared/components/Button';
+import logo from '../../../../public/logoCompletoEcommerce.png';
 
 function Dashboard() {
   const [openMenu, setOpenMenu] = useState(false);
@@ -54,7 +55,7 @@ function Dashboard() {
           sm:col-span-2
         "
       >
-        <span>Mi Dashboard</span>
+        <img src={logo} alt="Logo" width="200" />
         {renderLogoutButton()}
         <button
           className="

@@ -4,6 +4,7 @@ import Button from '../../shared/components/Button';
 import Card from '../../shared/components/Card';
 import CardContent from '../../shared/components/CardContent';
 import { getProducts } from '../services/list';
+import StructuredCard from '../../shared/components/StructuredCard';
 
 const productStatus = {
   ALL: 'all',
@@ -94,14 +95,28 @@ function ListProductsPage() {
           loading
             ? <span>Buscando datos...</span>
             : products.map(product => (
-              <CardContent
+              // <CardContent
+              //   key={product.sku}
+              //   props={{
+              //     header:`${product.sku} - ${product.name}`, 
+              //     description:`Stock: ${product.stockQuantity} - $${product.currentUnitPrice} - ${product.isActive ? 'Activado' : 'Desactivado'}`, 
+              //     button:'Ver'
+              //   }}
+              // />
+              <StructuredCard
                 key={product.sku}
-                props={{
-                  header:`${product.sku} - ${product.name}`, 
-                  description:`Stock: ${product.stockQuantity} - $${product.currentUnitPrice} - ${product.isActive ? 'Activado' : 'Desactivado'}`, 
-                  button:'Ver'
-                }}
-              />
+                className="flex flex-col"
+                title = {`${product.sku} - ${product.name}`}
+                content={
+                  <>Stock: {product.stockQuantity} - ${product.currentUnitPrice} - {product.isActive ? 'Activado' : 'Desactivado'}
+                  </>
+                }
+                actions={
+                  <>
+                    <Button onClick={() => navigate(`/admin/products/${product.sku}`)}>Ver</Button>
+                  </>
+                }
+              ></StructuredCard>
             ))
         }
       </div>

@@ -4,6 +4,7 @@ import Button from '../../shared/components/Button';
 import Card from '../../shared/components/Card';
 import CardContent from '../../shared/components/CardContent';
 import { getOrders } from '../services/list';
+import StructuredCard from '../../shared/components/StructuredCard';
 
 const orderStatus = {
   ALL: 'all',
@@ -91,14 +92,28 @@ function ListOrdersPage() {
           loading
             ? <span>Buscando datos...</span>
             : orders.map(order => (
-              <CardContent
+              // <CardContent
+              //   key={order.Guid}
+              //   props={{
+              //     header:`${'#'} - ${order.customerName}`, 
+              //     description:`Estado: ${order.status} | Total: $${order.totalAmount}`, 
+              //     button:'Ver'
+              //   }}
+              // />
+              <StructuredCard
                 key={order.Guid}
-                props={{
-                  header:`${'#'} - ${order.customerName}`, 
-                  description:`Estado: ${order.status} | Total: $${order.totalAmount}`, 
-                  button:'Ver'
-                }}
-              />
+                className="flex flex-col"
+                title={`Orden #${order.orderNumber} - ${order.customerName}`}
+                content={
+                  <>Estado: {order.status} | Total: ${order.totalAmount}
+                  </>
+                }
+                actions={
+                  <>
+                    <Button onClick={() => navigate(`/orders/${order.Guid}`)}>Ver</Button>
+                  </>
+                }
+              ></StructuredCard>
             ))
         }
       </div>

@@ -7,7 +7,8 @@ import { getGeneralProducts } from '../services/list';
 import logo from '../../../../public/logoCompletoEcommerce.png';
 import image from '../../../../public/imageNotFound.svg';
 import ProductCard from '../components/ProductCard';
-
+import StructuredCard from '../../shared/components/StructuredCard';
+import Counter from '../../shared/components/Counter';
 
 function ListGeneralProductsPage() {
     const navigate = useNavigate();
@@ -88,12 +89,29 @@ function ListGeneralProductsPage() {
             loading
                 ? <span>Buscando datos...</span>
                 : products.map(product => (
-                    <ProductCard key ={product.sku}
-                        image={image}
-                        name={product.name}
-                        currentUnitPrice={product.currentUnitPrice}
-                        stock={product.stockQuantity}
-                    />
+                    // <ProductCard key ={product.sku}
+                    //     image={image}
+                    //     name={product.name}
+                    //     currentUnitPrice={product.currentUnitPrice}
+                    //     stock={product.stockQuantity}
+                    // />
+                    <StructuredCard 
+                        key={product.sku} 
+                        className="flex flex-col"
+                        content={
+                            <>
+                                <img src={image} alt={product.name} className="w-full h-48 object-cover" />
+                                <p className="mt-2 font-semibold">{product.name}</p>
+                                <p className="mt-1 text-lg font-bold">${product.currentUnitPrice}</p>
+                            </>
+                        }
+                        actions={
+                            <>
+                                <Counter stock={product.stockQuantity} />
+                                <Button>Agregar</Button>
+                            </>
+                        }
+                    ></StructuredCard>
                 ))
             }
         </div>

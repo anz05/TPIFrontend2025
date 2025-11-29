@@ -4,9 +4,11 @@ import Button from '../../shared/components/Button';
 import Card from '../../shared/components/Card';
 import { getGeneralProducts } from '../services/list';
 import logo from '../../../../public/logoCompletoEcommerce.png';
+import Counter from '../../shared/components/Counter';
 
 function ShoppingCartPage() {
     const navigate = useNavigate();
+    const [count, setCount] = useState(0);
 
     const [searchTerm, setSearchTerm] = useState('');
     const [pageNumber, setPageNumber] = useState(1);
@@ -35,10 +37,10 @@ function ShoppingCartPage() {
     useEffect(() => {
         fetchProducts();
     }, [pageSize, pageNumber]);
-
+    
     return (
         <div className="relative">
-        <header className="bg-white border border-gray-300 p-4 mb-4 rounded-xl">
+        <header className="bg-white border border-gray-300 p-4 mb-4 rounded-xl ">
 
             <div className="flex items-center justify-between sm:hidden">
 
@@ -98,7 +100,7 @@ function ShoppingCartPage() {
             >
                 <div
                 className="absolute left-0 top-0 bg-white w-64 h-full shadow-lg p-4"
-                onClick={(e) => e.stopPropagation()}
+                //onClick={(e) => e.stopPropagation()}
                 >
                 <h2 className="font-bold text-lg mb-4">Menú</h2>
 
@@ -145,10 +147,13 @@ function ShoppingCartPage() {
                 products.map(product => (
                 <Card key={product.sku} className="mb-3">
                     <h3 className="font-semibold text-lg">{product.name}</h3>
-                    <p className="text-gray-600">
-                    Stock: {product.stockQuantity} — ${product.currentUnitPrice}
-                    </p>
-                    <Button className="mt-3">Agregar</Button>
+                    <div className='flex justify-between items-center'>
+                        <p className="text-gray-600">
+                            Cantidad de productos: # — Subtotal: $
+                        </p>
+                        <Counter stock={product.stockQuantity} activeReset={true}/>
+                    </div>
+                    
                 </Card>
                 ))
             )}
@@ -156,7 +161,7 @@ function ShoppingCartPage() {
             <Card
             className="
                 fixed bottom-0 left-0 right-0
-                sm:static sm:w-full sm:h-[calc(100vh-160px)]
+                //sm:static sm:w-full sm:h-[calc(100vh-160px)]
                 sm:sticky sm:top-4
                 z-20
             "

@@ -3,6 +3,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import useAuth from '../../auth/hook/useAuth';
 import Button from '../../shared/components/Button';
 import logo from '../../../../public/logoCompletoEcommerce.png';
+import ResponsiveText from '../../shared/components/ResponsiveText';
 
 function Dashboard() {
   const [openMenu, setOpenMenu] = useState(false);
@@ -18,7 +19,7 @@ function Dashboard() {
 
   const getLinkStyles = ({ isActive }) => (
     `
-      pl-4 w-full block  pt-4 pb-4 rounded-4xl transition hover:bg-gray-100
+      pl-4 w-full block  pt-2 pb-3 rounded-4xl transition hover:bg-gray-100
       ${isActive
       ? 'bg-purple-200 hover:bg-purple-100 '
       : ''
@@ -95,19 +96,19 @@ function Dashboard() {
               <NavLink
                 to='/admin/home'
                 className={getLinkStyles}
-              >Principal</NavLink>
+              ><ResponsiveText>Principal</ResponsiveText></NavLink>
             </li>
             <li>
               <NavLink
                 to='/admin/products'
                 className={getLinkStyles}
-              >Productos</NavLink>
+              ><ResponsiveText>Productos</ResponsiveText></NavLink>
             </li>
             <li>
               <NavLink
                 to='/admin/orders'
                 className={getLinkStyles}
-              >Ordenes</NavLink>
+              ><ResponsiveText>Ordenes</ResponsiveText></NavLink>
             </li>
           </ul>
           <hr className='opacity-15 mt-4' />

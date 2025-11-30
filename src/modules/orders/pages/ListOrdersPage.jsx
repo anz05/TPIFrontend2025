@@ -5,6 +5,7 @@ import Card from '../../shared/components/Card';
 import CardContent from '../../shared/components/CardContent';
 import { getOrders } from '../services/list';
 import StructuredCard from '../../shared/components/StructuredCard';
+import Pagination from '../../shared/components/Pagination';
 
 const orderStatus = {
   ALL: 'all',
@@ -30,18 +31,26 @@ function ListOrdersPage() {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const { data, error } = await getOrders(searchTerm, status, pageNumber, pageSize);
+      const statusToSend = status === orderStatus.ALL ? null : status;
+      const { data, error } = await getOrders(searchTerm, statusToSend, pageNumber, pageSize);
 
       if (error) throw error;
 
-    setTotal(data.total ?? data.totalCount ?? 0);
-    setOrders(Array.isArray(data.orderItems) ? data.orderItems : (Array.isArray(data.orders) ? data.orders : (Array.isArray(data.Orders) ? data.Orders : [])));
+      setTotal(data.totalFiltered ?? data.total ?? 0); 
+      
+      setOrders(Array.isArray(data.orderItems) 
+        ? data.orderItems 
+        : (Array.isArray(data.orders) 
+            ? data.orders 
+            : (Array.isArray(data.Orders) ? data.Orders : [])
+          )
+      );
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
-  };
+};
 
   useEffect(() => {
     fetchOrders();
@@ -93,18 +102,10 @@ function ListOrdersPage() {
           loading
             ? <span>Buscando datos...</span>
             : orders.map(order => (
-              // <CardContent
-              //   key={order.Guid}
-              //   props={{
-              //     header:`${'#'} - ${order.customerName}`, 
-              //     description:`Estado: ${order.status} | Total: $${order.totalAmount}`, 
-              //     button:'Ver'
-              //   }}
-              // />
               <StructuredCard
                 key={order.Guid}
                 className="flex flex-col"
-                title={`Orden #${order.orderNumber} - ${order.customerName}`}
+                title={`Orden #${order.id} - ${order.customerName}`}
                 content={
                   <>Estado: {order.status} | Total: ${order.totalAmount}
                   </>
@@ -119,37 +120,13 @@ function ListOrdersPage() {
         }
       </div>
 
-      <div className='flex justify-center items-center mt-3'>
-        <Button
-          disabled={pageNumber === 1}
-          onClick={() => setPageNumber(pageNumber - 1)}
-          className='bg-gray-200 disabled:bg-gray-100'
-        >
-          Atras
-        </Button>
-        <span>{pageNumber} / {totalPages}</span>
-        <Button
-          disabled={ pageNumber === totalPages }
-          onClick={() => setPageNumber(pageNumber + 1)}
-          className='bg-gray-200 disabled:bg-gray-100'
-        >
-          Siguiente
-        </Button>
-
-        <select
-          value={pageSize}
-          onChange={evt => {
-            setPageNumber(1);
-            setPageSize(Number(evt.target.value));
-          }}
-          className='ml-3'
-        >
-          <option value="2">2</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-          <option value="20">20</option>
-        </select>
-      </div>
+      <Pagination
+        pageNumber={pageNumber}
+        totalPages={totalPages}
+        pageSize={pageSize}
+        setPageNumber={setPageNumber}
+        setPageSize={setPageSize}
+      />
     </div>
 
   );

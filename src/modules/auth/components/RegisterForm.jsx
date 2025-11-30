@@ -7,7 +7,7 @@ import { register as registerService } from '../services/register';
 import { frontendErrorMessage } from '../helpers/backendError';
 import Card from '../../shared/components/Card';
 
-function RegisterForm() {
+function RegisterForm({hasRole}) {
     const { register, handleSubmit, watch, formState: { errors } } = useForm({
         defaultValues: { username: '', email: '', role: 'USER', password: '', confirmPassword: '' }
     });
@@ -20,13 +20,13 @@ function RegisterForm() {
         setServerError('Las contraseñas no coinciden');
         return;
     }
-
+    const finalRole = hasRole ? values.role : 'USER';
     try {
         setLoading(true);
         const { data, error } = await registerService({
             username: values.username,
             email: values.email,
-            role: values.role,
+            role: finalRole,
             password: values.password,
         });
         if (error) {
@@ -75,13 +75,19 @@ function RegisterForm() {
                 } 
                 error={errors.email?.message} 
             />
-            <label className="block">
-            Rol
-            <select {...register('role')} className="block w-full mt-1">
-                <option value="USER">User</option>
-                <option value="ADMIN">Admin</option>
-            </select>
-            </label>
+            {hasRole && (
+                <label className="block">
+                    Rol
+                    <select 
+                        {...register('role')} 
+                        className="block w-full mt-1 p-2 border border-gray-300 rounded-md"
+                    >
+                        <option value="USER">User</option>
+                        <option value="ADMIN">Admin</option>
+                    </select>
+                </label>
+            )}
+            
             <Input 
                 label="Contraseña" 
                 type="password" 

@@ -3,11 +3,13 @@ import { instance } from '../../shared/api/axiosInstance';
 export const getOrders = async (search = null, status = null, pageNumber = 1, pageSize = 20) => {
     const queryString = new URLSearchParams({
         search,
-        status,
         pageNumber,
         pageSize,
     });
-    const response = await instance.get(`api/orders/admin?${queryString}`);
+    if (status) {
+        queryString.set('status', status);
+    }
+    const response = await instance.get(`api/orders?${queryString}`);
     return { data: response.data, error: null };
 };
 
@@ -20,7 +22,7 @@ export const getOrdersCount = async (status = null) => {
         params.set('pageNumber', 1);
         params.set('pageSize', 1);
 
-        const response = await instance.get(`api/orders/admin?${params}`);
+        const response = await instance.get(`api/orders?${params}`);
 
         const total = response.data?.total ?? response.data?.totalCount ?? null;
 

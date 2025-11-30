@@ -4,11 +4,15 @@ import Button from "../../shared/components/Button";
 import StructuredCard from "../../shared/components/StructuredCard";
 import Counter from "../../shared/components/Counter";
 import ResponsiveText from "../../shared/components/ResponsiveText";
+import Modal from "../../shared/components/Modal";
+import Input from "../../shared/components/Input";
+import LoginForm from "../../auth/components/LoginForm";
 
 function ShoppingCartPage() {
     const navigate = useNavigate();
 
     const [cartItems, setCartItems] = useState([]);
+    const [isOpen, setIsOpen] = useState(false);
 
     const loadCartFromLocalStorage = useCallback(() => {
         try {
@@ -76,8 +80,8 @@ function ShoppingCartPage() {
         });
 
         return {
-        totalQuantity: totalQty,
-        totalPrice: totalPrc.toFixed(2),
+            totalQuantity: totalQty,
+            totalPrice: totalPrc.toFixed(2),
         };
     }, [cartItems]);
 
@@ -94,6 +98,29 @@ function ShoppingCartPage() {
         </div>
         );
     }
+
+    const openLoginModal = () => {
+        setIsOpen(true);
+    };
+
+    const manageOrder = () => {
+        const token = localStorage.getItem("token");
+        
+        if (!token) {
+            openLoginModal();
+            return;
+        }
+
+        alert(`Orden gestionada. Total a pagar: $${totalPrice}`);
+        setCartItems([]);
+        localStorage.removeItem("cart");
+        navigate("/");
+    };
+
+    const redirectToAuth = (path) => {
+        setIsOpen(false);
+        navigate(path);   
+    };
 
     return (
     <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 px-4 py-6">
@@ -152,12 +179,18 @@ function ShoppingCartPage() {
             }
             actions={
                 <>
-                    <Button className="w-full mt-4">Finalizar compra</Button>
+                    <Button className="w-full mt-4" onClick={manageOrder}>Finalizar compra</Button>
                 </>
             }
             contentClassName={'flex flex-col'}
             >
         </StructuredCard>
+
+        <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+            <div className="flex flex-col gap-3">
+                <LoginForm />
+            </div>
+        </Modal>
     </div>
     );
 }

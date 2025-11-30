@@ -10,7 +10,7 @@ function RegisterPage() {
         bg-neutral-100
         sm:items-center
     '>
-        <RegisterForm />
+        <RegisterForm hasRole={true} />
     </div>
     );
 }

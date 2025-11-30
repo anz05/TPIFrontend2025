@@ -12,9 +12,9 @@ return (
         <option
             key={opt.value}
             value={opt.value}
-            className="text-[clamp(11px,2.5vw,15px)]"
+            className="text-[clamp(16px,2vw,20px)] leading-normal"
         >
-            <ResponsiveText>{opt.label}</ResponsiveText>
+            {opt.label}
         </option>
     ))}
     </select>

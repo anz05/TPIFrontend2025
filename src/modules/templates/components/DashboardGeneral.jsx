@@ -5,6 +5,10 @@ import Button from '../../shared/components/Button';
 import logo from '../../../../public/logoCompletoEcommerce.png';
 import smallLogo from '../../../../public/logoEcommerce1.png';
 import ResponsiveText from '../../shared/components/ResponsiveText';
+import Modal from '../../shared/components/Modal';
+import LoginForm from '../../auth/components/LoginForm';
+import RegisterForm from '../../auth/components/RegisterForm';
+
 
 function DashboardGeneral() {
   const [openMenu, setOpenMenu] = useState(false);
@@ -19,14 +23,23 @@ function DashboardGeneral() {
   const location = useLocation();
 
   const navigate = useNavigate();
+  
+  const [isOpenLogin, setIsOpenLogin] = useState(false);
+  const [isOpenSignup, setIsOpenSignup] = useState(false);
 
   const { singOut } = useAuth();
 
-  const logout = () => {
-    singOut();
-    navigate('/login');
+  // const logout = () => {
+  //   singOut();
+  //   navigate('/login');
+  // };
+  const openLoginModal = () => {
+    setIsOpenLogin(true);
   };
 
+  const openSignupModal = () => {
+    setIsOpenSignup(true);
+  }
   const getLinkStyles = ({ isActive }) => (
     `
       pl-4 w-full block  pt-4 pb-4 rounded-4xl transition hover:bg-gray-100
@@ -41,13 +54,13 @@ function DashboardGeneral() {
     <div className='hidden sm:flex gap-4'>
       <Button 
         className='bg-purple-200 hover:bg-purple-100' 
-        onClick={() => navigate('/login')}
+        onClick={() => {openLoginModal()}}
       >
         Iniciar Sesión
       </Button>
       <Button 
         className='bg-gray-200 hover:bg-gray-100' 
-        onClick={() => navigate('/signup')}
+        onClick={() => {openSignupModal()}}
       >
         Registrarse
       </Button>
@@ -223,6 +236,16 @@ function DashboardGeneral() {
         </nav>
         
       </aside>
+      <Modal isOpen={isOpenLogin} onClose={() => setIsOpenLogin(false)}>
+            <div className="flex flex-col gap-3">
+                <LoginForm />
+            </div>
+        </Modal>
+        <Modal isOpen={isOpenSignup} onClose={() => setIsOpenSignup(false)}>
+            <div className="flex flex-col gap-3">
+                <RegisterForm hasRole={false}/>
+            </div>
+        </Modal>
 
       <main
         className="

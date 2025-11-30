@@ -92,10 +92,6 @@ function ListGeneralProductsPage() {
 
     const totalPages = Math.ceil(total / pageSize);
 
-    const handleSearch = async () => {
-        await fetchProducts();
-    };
-
     const getLinkStyles = ({ isActive }) => (
     `
         pl-4 w-25 block  pt-4 pb-4 rounded-4xl transition hover:bg-gray-100
@@ -120,24 +116,17 @@ function ListGeneralProductsPage() {
             content={
                 <div className="flex flex-col gap-3">
 
-                    {/* Imagen */}
                     <img
                         src={image ?? product.image}
                         alt={product.name}
                         className="w-full rounded-lg object-cover h-80 sm:h-40 md:h-48"
                     />
-
-                    {/* Nombre */}
                     <ResponsiveText as="h2" className="font-semibold">
                         {product.name}
                     </ResponsiveText>
-
-                    {/* Precio */}
                     <ResponsiveText as="p" className="font-bold mt-1">
                         ${product.currentUnitPrice}
                     </ResponsiveText>
-
-                    {/* Controles */}
                     <div className="flex items-center justify-between">
                         <Counter
                             stock={product.stockQuantity}

@@ -4,13 +4,16 @@ import useAuth from '../../auth/hook/useAuth';
 import Button from '../../shared/components/Button';
 import logo from '../../../../public/logoCompletoEcommerce.png';
 import smallLogo from '../../../../public/logoEcommerce1.png';
+import ResponsiveText from '../../shared/components/ResponsiveText';
 
 function DashboardGeneral() {
   const [openMenu, setOpenMenu] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const handleSearch = () => {
-    console.log('Searching for:', searchTerm);
-    
+
+  const [loading, setLoading] = useState(false);
+
+  const handleSearch = async () => {
+    //FALTA AGREGAR FUNCIONALIDAD DE BUSQUEDA
   };
 
   const location = useLocation();
@@ -107,22 +110,22 @@ function DashboardGeneral() {
     <ul className='flex flex-col'>
       <li>
         <NavLink to='/' className={getLinkStyles} onClick={() => setOpenMenu(false)}>
-          Productos
+          <ResponsiveText>Productos</ResponsiveText>
         </NavLink>
       </li>
       <li>
         <NavLink to='/cart' className={getLinkStyles} onClick={() => setOpenMenu(false)}>
-          Carrito de compras
+          <ResponsiveText>Carrito de compras</ResponsiveText>
         </NavLink>
       </li>
       <li>
         <NavLink to='/login' className={getLinkStyles} onClick={() => setOpenMenu(false)}>
-          Iniciar sesión
+          <ResponsiveText>Iniciar sesión</ResponsiveText>
         </NavLink>
       </li>
       <li>
         <NavLink to='/signup' className={getLinkStyles} onClick={() => setOpenMenu(false)}>
-          Registrarse
+          <ResponsiveText>Registrarse</ResponsiveText>
         </NavLink>
       </li>
     </ul>
@@ -138,7 +141,7 @@ function DashboardGeneral() {
         grid-rows-[auto_1fr]
 
         sm:gap-3
-        sm:grid-cols-1 // CAMBIO 1: Una sola columna para escritorio
+        sm:grid-cols-1
       "
     >
       <header
@@ -150,7 +153,7 @@ function DashboardGeneral() {
           shadow
           rounded
           bg-white
-          sm:col-span-1 // CAMBIO 2: Ocupa toda la fila/columna en escritorio
+          sm:col-span-1
           sm:px-6 
           sm:py-4
           gap-4
@@ -208,7 +211,7 @@ function DashboardGeneral() {
           flex
           flex-col
           justify-between
-          z-10
+          z-30
           transition-all duration-300
 
           sm:hidden // CAMBIO 3: Oculta el aside en pantallas grandes

@@ -85,11 +85,11 @@ function ShoppingCartPage() {
         return (
         <div className="p-4 text-center">
             <ResponsiveText as="p" className="font-semibold">
-            🛒 Tu carrito está vacío.
+                Tu carrito está vacío.
             </ResponsiveText>
 
             <Button className="mt-4" onClick={() => navigate("/")}>
-            Ir a Comprar
+                Ir a Comprar
             </Button>
         </div>
         );
@@ -97,9 +97,7 @@ function ShoppingCartPage() {
 
     return (
     <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 px-4 py-6">
-
-        {/* Columna izquierda (Items) */}
-        <div className="lg:col-span-2 flex flex-col">
+        <div className="lg:col-span-2 flex flex-col pb-40">
         {cartItems.map((item) => (
             <StructuredCard
             key={item.sku}
@@ -118,17 +116,17 @@ function ShoppingCartPage() {
 
                 <div className="flex items-center justify-between mt-2">
                     <Counter
-                    initialCount={item.quantity}
-                    stock={100}
-                    activeReset={false}
-                    onCountChange={(count) => handleCounterChange(item.sku, count)}
+                        initialCount={item.quantity}
+                        stock={100}
+                        activeReset={false}
+                        onCountChange={(count) => handleCounterChange(item.sku, count)}
                     />
 
                     <Button
-                    className="bg-purple-200 hover:bg-purple-300 text-purple-800 text-sm px-4 py-2 rounded-xl"
-                    onClick={() => handleRemoveItem(item.sku)}
+                        className="bg-purple-200 hover:bg-purple-300 text-purple-800 text-sm px-4 py-2 rounded-xl"
+                        onClick={() => handleRemoveItem(item.sku)}
                     >
-                    Borrar
+                        Borrar
                     </Button>
                 </div>
                 </div>
@@ -136,32 +134,32 @@ function ShoppingCartPage() {
             />
         ))}
         </div>
-        {/* Columna derecha (Resumen) */}
+
         <StructuredCard
-            className="lg:sticky lg:top-4"   /* sticky SOLO en lg */
+            className="
+                fixed bottom-0 left-0 right-0
+                sm:static sm:w-full sm:h-[calc(100vh-160px)]
+                sm:top-4 lg:sticky
+                z-20
+                flex flex-col
+            "
             title="Detalle del pedido"
             content={
-            /* obligamos a que cada línea sea bloque y con gap */
-            <div>
-                <ResponsiveText as="p" className="mt-2">
-                Cantidad en total: {totalQuantity}
-                </ResponsiveText>
-
-                <ResponsiveText as="p" className="mt-1">
-                Total a pagar: ${totalPrice}
-                </ResponsiveText>
-            </div>
+                <>
+                    <ResponsiveText className="mt-2">Cantidad total: {totalQuantity}</ResponsiveText>
+                    <ResponsiveText className="mt-1">Precio total: ${totalPrice}</ResponsiveText>
+                </>
             }
             actions={
-            <Button className="w-full mt-4">
-                Finalizar Compra
-            </Button>
+                <>
+                    <Button className="w-full mt-4">Finalizar compra</Button>
+                </>
             }
-        />
+            contentClassName={'flex flex-col'}
+            >
+        </StructuredCard>
     </div>
     );
-
-
 }
 
 export default ShoppingCartPage;

@@ -21,7 +21,6 @@ function Counter(props) {
 
   return (
     <div className="flex items-center gap-3">
-      {/* Botón - */}
       <button
         onClick={decrease}
         disabled={count === 0}
@@ -29,18 +28,16 @@ function Counter(props) {
       >
         <span className="text-xl text-gray-600">−</span>
       </button>
-
-      {/* Input */}
-      <ResponsiveText as='input'
+      <input 
         type="number"
         value={count}
         onChange={(e) => setCount(Number(e.target.value))}
-        className={`h-8 w-10 border text-center rounded-md ${
-          hasError ? "border-red-500" : "border-gray-300"
-        }`}
+        className={`
+            h-8 w-10 border text-center rounded-md 
+            text-base font-medium 
+            ${hasError ? "border-red-500" : "border-gray-300"}
+        `}
       />
-
-      {/* Botón + */}
       <button
         onClick={increase}
         disabled={count === props.stock}

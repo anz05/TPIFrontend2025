@@ -1,4 +1,5 @@
 import React from "react";
+import ResponsiveText from "./ResponsiveText";
 
 function SelectStatus({ value, onChange, options }) {
 return (
@@ -9,11 +10,11 @@ return (
     >
     {options.map(opt => (
         <option
-        key={opt.value}
-        value={opt.value}
-        className="text-[clamp(11px,2.5vw,15px)]"
+            key={opt.value}
+            value={opt.value}
+            className="text-[clamp(11px,2.5vw,15px)]"
         >
-        {opt.label}
+            <ResponsiveText>{opt.label}</ResponsiveText>
         </option>
     ))}
     </select>

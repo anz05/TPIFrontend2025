@@ -1,104 +1,56 @@
 import Button from "./Button";
 import Input from "./Input";
 import { useState , useEffect } from "react";
+import ResponsiveText from "./ResponsiveText";
 
 function Counter(props) {
   const [count, setCount] = useState(props.initialCount || 0);
   const [hasError, setHasError] = useState(false); 
 
   useEffect(() => {
-    if (props.onCountChange) {
-      props.onCountChange(count);
-    }
-    // Intentionally only depend on `count` to avoid re-calling when
-    // parent provides an unstable callback reference on every render.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    props.onCountChange?.(count);
   }, [count]);
-  
+
   const increase = () => {
-    if (count < props.stock) {
-      setCount(count + 1);
-      setHasError(false); 
-    } else {
-      setHasError(true); 
-    }
+    if (count < props.stock) setCount(count + 1);
   };
 
   const decrease = () => {
-    if (count > 0) {
-      setCount(count - 1);
-      setHasError(false);
-    }
-  };
-
-  const reset = () => {
-    setCount(0);
-    setHasError(false);
-  }
-
-  const handleInputChange = (event) => {
-    const value = parseInt(event.target.value, 10);
-    
-    if (isNaN(value) || value < 0) {
-      setCount(0); 
-      setHasError(false);
-    } 
-    else if (value > props.stock) {
-      setCount(props.stock); 
-      setHasError(true); 
-    } 
-    else {
-      setCount(value);
-      setHasError(false);
-    }
+    if (count > 0) setCount(count - 1);
   };
 
   return (
-    <div>
-      <div className="flex items-center space-x-2">
-        <button 
-          className='h-7 w-7 rounded-2xl'
-          onClick={decrease}
-          disabled={count === 0} 
-        >
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
-            <g id="SVGRepo_iconCarrier"> <path d="M6 12L18 12" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g>
-          </svg>
-        </button>
+    <div className="flex items-center gap-3">
+      {/* Botón - */}
+      <button
+        onClick={decrease}
+        disabled={count === 0}
+        className="h-8 w-8 flex items-center justify-center rounded-xl border border-gray-300"
+      >
+        <span className="text-xl text-gray-600">−</span>
+      </button>
 
-        <input 
-          type="number"
-          value={count}
-          onChange={handleInputChange}
-          min="0"
-          max={props.stock} 
-          className={`border text-center h-7 w-12 rounded-lg ${hasError ? 'border-red-500' : 'border-gray-200'}`} 
-        >
-        </input>
+      {/* Input */}
+      <ResponsiveText as='input'
+        type="number"
+        value={count}
+        onChange={(e) => setCount(Number(e.target.value))}
+        className={`h-8 w-10 border text-center rounded-md ${
+          hasError ? "border-red-500" : "border-gray-300"
+        }`}
+      />
 
-        <button 
-          className='h-7 w-7 rounded-2xl'
-          onClick={increase}
-          disabled={count === props.stock}
-        >
-          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
-            <g id="SVGRepo_iconCarrier"> <path d="M5 11C4.44772 11 4 10.5523 4 10C4 9.44772 4.44772 9 5 9H15C15.5523 9 16 9.44772 16 10C16 10.5523 15.5523 11 15 11H5Z" fill="#000000"></path> <path d="M9 5C9 4.44772 9.44772 4 10 4C10.5523 4 11 4.44772 11 5V15C11 15.5523 10.5523 16 10 16C9.44772 16 9 15.5523 9 15V5Z" fill="#000000"></path> </g>
-          </svg>
-        </button>
-        {props.activeReset && <Button className="ml-4" onClick={reset}>Borrar</Button>}
-        {hasError && (
-          <p className="text-red-500 text-sm mt-2 w-full text-center"> 
-            Máximo de stock alcanzado
-          </p>
-        )}
-
-        {/* NO ESTA ANDANDO ESTO DE LOS ERRORES */}
-      </div> 
-      
-    </div> 
+      {/* Botón + */}
+      <button
+        onClick={increase}
+        disabled={count === props.stock}
+        className="h-8 w-8 flex items-center justify-center rounded-xl border border-gray-300"
+      >
+        <span className="text-xl text-gray-600">+</span>
+      </button>
+    </div>
   );
-};
+}
+
 
 export default Counter;

@@ -1,4 +1,5 @@
 import ResponsiveText from './ResponsiveText';
+import SelectStatus from './SelectStatus';
 
 function Pagination({pageNumber,totalPages,pageSize,setPageNumber,setPageSize
 }) {
@@ -14,7 +15,7 @@ return (
         Atrás
     </ResponsiveText>
 
-    <span className="text-[clamp(14px,2vw,18px)]">
+    <span className="text-[clamp(18px,2vw,18px)]">
         {pageNumber} / {totalPages}
     </span>
 
@@ -27,20 +28,19 @@ return (
         Siguiente
     </ResponsiveText>
 
-    <ResponsiveText
-        as="select"
-        value={pageSize}
-        onChange={(evt) => {
+    <SelectStatus
+    value={pageSize}
+    onChange={(value) => {
         setPageNumber(1);
-        setPageSize(Number(evt.target.value));
-        }}
-        className="ml-3 bg-gray-200 px-2 py-1 rounded-md"
-    >
-        <option value="2">2</option>
-        <option value="10">10</option>
-        <option value="15">15</option>
-        <option value="20">20</option>
-    </ResponsiveText>
+        setPageSize(Number(value));
+    }}
+    options={[
+        { value: 10, label: "10" },
+        { value: 2, label: "2" },
+        { value: 15, label: "15" },
+        { value: 20, label: "20" }
+    ]}
+    />
 
     </div>
 );

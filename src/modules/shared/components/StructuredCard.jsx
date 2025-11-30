@@ -2,31 +2,22 @@ import React from 'react';
 import Card from './Card';
 import ResponsiveText from './ResponsiveText';
 
-function StructuredCard({ 
-    title, 
-    content, 
-    actions, 
-    className, 
-    titleClassName, 
-    contentClassName, 
-    actionsClassName,
-    ...rest 
-}) {
+function StructuredCard({ title, content, actions, className, titleClassName, contentClassName, actionsClassName, ...rest }) {
   return (
     <Card className={className} {...rest}> 
 
       {title && (
-        <ResponsiveText as="h2" className={titleClassName}>
+        <ResponsiveText as="h2" className={`text-lg font-semibold mb-2 ${titleClassName || ""}`}>
           {title}
         </ResponsiveText>
       )}
 
-      <ResponsiveText as="div" className={contentClassName}>
+      <div className={`mb-3 ${contentClassName || ""}`}>
         {content}
-      </ResponsiveText>
+      </div>
 
       {actions && (
-        <ResponsiveText as="div" className={actionsClassName}>
+        <ResponsiveText as="div" className={`mt-3 ${actionsClassName || ""}`}>
           {actions}
         </ResponsiveText>
       )}

@@ -17,6 +17,13 @@ function DashboardGeneral() {
 
   const navigate = useNavigate();
 
+  const { singOut } = useAuth();
+
+  const logout = () => {
+    singOut();
+    navigate('/login');
+  };
+
   const getLinkStyles = ({ isActive }) => (
     `
       pl-4 w-full block  pt-4 pb-4 rounded-4xl transition hover:bg-gray-100

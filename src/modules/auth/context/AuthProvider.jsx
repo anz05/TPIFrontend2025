@@ -10,12 +10,12 @@ function AuthProvider({ children }) {
     return Boolean(token);
   });
 
-  const singout = () => {
+  const signOut = () => {
     localStorage.clear();
     setIsAuthenticated(false);
   };
 
-  const singin = async (username, password) => {
+  const signIn = async (username, password) => {
     const { data, error } = await login(username, password);
 
     if (error) {
@@ -32,8 +32,8 @@ function AuthProvider({ children }) {
     <AuthContext.Provider
       value={ {
         isAuthenticated,
-        singin,
-        singout,
+        signIn,
+        signOut,
       } }
     >
       {children}

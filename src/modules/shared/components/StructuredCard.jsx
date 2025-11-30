@@ -1,8 +1,6 @@
 import React from 'react';
-import CardTitle from './CardTitle';
-import CardContent from './CardContent';
-import CardActions from './CardActions';
 import Card from './Card';
+import ResponsiveText from './ResponsiveText';
 
 function StructuredCard({ 
     title, 
@@ -15,10 +13,24 @@ function StructuredCard({
     ...rest 
 }) {
   return (
-    <Card className={`${className}`} {...rest}> 
-      {title && <CardTitle className={titleClassName}>{title}</CardTitle> } 
-      <CardContent className={contentClassName}>{content}</CardContent>
-      {actions && <CardActions className={actionsClassName}>{actions}</CardActions>}
+    <Card className={className} {...rest}> 
+
+      {title && (
+        <ResponsiveText as="h2" className={titleClassName}>
+          {title}
+        </ResponsiveText>
+      )}
+
+      <ResponsiveText as="div" className={contentClassName}>
+        {content}
+      </ResponsiveText>
+
+      {actions && (
+        <ResponsiveText as="div" className={actionsClassName}>
+          {actions}
+        </ResponsiveText>
+      )}
+
     </Card>
   );
 };

@@ -4,7 +4,9 @@ import Button from '../../shared/components/Button';
 import Card from '../../shared/components/Card';
 import CardContent from '../../shared/components/CardContent';
 import { getProducts } from '../services/list';
+import ResponsiveText from '../../shared/components/ResponsiveText';
 import StructuredCard from '../../shared/components/StructuredCard';
+import Pagination from '../../shared/components/Pagination';
 
 const productStatus = {
   ALL: 'all',
@@ -57,7 +59,9 @@ function ListProductsPage() {
         <div
           className='flex justify-between items-center mb-3'
         >
-          <h1 className='text-3xl'>Productos</h1>
+          <ResponsiveText className="font-bold">
+            Productos
+          </ResponsiveText>
           <Button
             className='h-11 w-11 rounded-2xl sm:hidden'
             onClick={() => navigate('/admin/products/create')}
@@ -90,79 +94,42 @@ function ListProductsPage() {
         </div>
       </Card>
 
-      <div className='mt-4 flex flex-col gap-4'>
+      <div className='mt-4 flex flex-col gap-0.5'>
         {
           loading
             ? <span>Buscando datos...</span>
             : products.map(product => (
-              // <CardContent
-              //   key={product.sku}
-              //   props={{
-              //     header:`${product.sku} - ${product.name}`, 
-              //     description:`Stock: ${product.stockQuantity} - $${product.currentUnitPrice} - ${product.isActive ? 'Activado' : 'Desactivado'}`, 
-              //     button:'Ver'
-              //   }}
-              // />
-              <StructuredCard
-                key={product.sku}
-                //className="flex flex-row justify-between items-center flex-wrap"
-                className='grid grid-rows-2 gap-2 hover:bg-gray-50'
-                title = {`${product.sku} - ${product.name}`}
-                content={
-                  <>Stock: {product.stockQuantity} - ${product.currentUnitPrice} - {product.isActive ? 'Activado' : 'Desactivado'}
-                  </>
-                // }
-                // {...(!mobile ? { 
-                //     actions: (
-                //         <>
-                //             <Button>Ver</Button>
-                //         </>
-                //     )
-                // } : {})
-                }
-                actions={
-                  <>
-                    <Button>Ver</Button>
-                  </>
-                }
-              ></StructuredCard>
+          <StructuredCard
+            key={product.sku}
+            className='grid grid-rows-1 hover:bg-gray-50'
+            title={
+              <>
+                <span className="font-bold">{product.sku} - {product.name}</span>
+              </>
+            }
+            
+            content={
+              <>
+                Stock: {product.stockQuantity} - ${product.currentUnitPrice} - 
+                {product.isActive ? 'Activado' : 'Desactivado'}
+              </>
+            }
+            actions={
+              <Button className="hidden md:block">Ver</Button>
+            }
+          />
             ))
         }
       </div>
 
-      <div className='flex justify-center items-center mt-3'>
-        <button
-          disabled={pageNumber === 1}
-          onClick={() => setPageNumber(pageNumber - 1)}
-          className='bg-gray-200 disabled:bg-gray-100'
-        >
-          Atras
-        </button>
-        <span>{pageNumber} / {totalPages}</span>
-        <button
-          disabled={ pageNumber === totalPages }
-          onClick={() => setPageNumber(pageNumber + 1)}
-          className='bg-gray-200 disabled:bg-gray-100'
-        >
-          Siguiente
-        </button>
-
-        <select
-          value={pageSize}
-          onChange={evt => {
-            setPageNumber(1);
-            setPageSize(Number(evt.target.value));
-          }}
-          className='ml-3'
-        >
-          <option value="2">2</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-          <option value="20">20</option>
-        </select>
-      </div>
+      <Pagination
+        pageNumber={pageNumber}
+        totalPages={totalPages}
+        pageSize={pageSize}
+        setPageNumber={setPageNumber}
+        setPageSize={setPageSize}
+      />
     </div>
-
   );
 };
 

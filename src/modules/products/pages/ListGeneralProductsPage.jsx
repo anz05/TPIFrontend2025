@@ -142,21 +142,21 @@ function ListGeneralProductsPage() {
             </div>
 
         <div className='flex justify-center items-center mt-3'>
-            <button
+            <Button
             disabled={pageNumber === 1}
             onClick={() => setPageNumber(pageNumber - 1)}
             className='bg-gray-200 disabled:bg-gray-100'
             >
             Atras
-            </button>
+            </Button>
             <span>{pageNumber} / {totalPages}</span>
-            <button
+            <Button
             disabled={ pageNumber === totalPages }
             onClick={() => setPageNumber(pageNumber + 1)}
             className='bg-gray-200 disabled:bg-gray-100'
             >
             Siguiente
-            </button>
+            </Button>
 
             <select
             value={pageSize}

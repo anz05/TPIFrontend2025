@@ -32,21 +32,21 @@ function ListOrdersPage() {
     try {
       setLoading(true);
       const statusToSend = status === orderStatus.ALL ? null : status;
-      const { data, error } = await getOrders(searchTerm, statusToSend, pageNumber, pageSize);
+      const { dataOrders, errorOrders } = await getOrders(searchTerm, statusToSend, pageNumber, pageSize);
 
-      if (error) throw error;
+      if (errorOrders) throw errorOrders;
 
-      setTotal(data.totalFiltered ?? data.total ?? 0); 
+      setTotal(dataOrders.totalFiltered ?? 0); 
       
-      setOrders(Array.isArray(data.orderItems) 
-        ? data.orderItems 
-        : (Array.isArray(data.orders) 
-            ? data.orders 
-            : (Array.isArray(data.Orders) ? data.Orders : [])
+      setOrders(Array.isArray(dataOrders.orderItems) 
+        ? dataOrders.orderItems 
+        : (Array.isArray(dataOrders.orders) 
+            ? dataOrders.orders 
+            : (Array.isArray(dataOrders.Orders) ? dataOrders.Orders : [])
           )
       );
-    } catch (error) {
-      console.error(error);
+    } catch (errerrorOrdersor) {
+      console.error(errorOrders);
     } finally {
       setLoading(false);
     }

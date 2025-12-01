@@ -24,7 +24,7 @@ export const getProductsCount = async (status = null) => {
 
     const response = await instance.get(`api/products/admin?${params}`);
 
-    const total = response.data?.total ?? response.data?.totalCount ?? null;
+    const total = response.data?.totalCount ?? null;
 
     return { data: total, error: null };
   } catch (error) {

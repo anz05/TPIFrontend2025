@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Card from '../../shared/components/Card';
-import { getProductsCount } from '../../products/services/list';
+import { getProducts } from '../../products/services/list';
+import { getOrders } from '../../orders/services/list';
 import StructuredCard from '../../shared/components/StructuredCard';
 import CardTitle from '../../shared/components/CardTitle';
 import CardContent from '../../shared/components/CardContent';
@@ -15,12 +16,20 @@ function Home() {
         async function loadCounts() {
             setLoading(true);
 
-            const { data, error } = await getProductsCount();
+            const { data, error } = await getProducts();
             if (!error) {
-                setProductsCount(data ?? 0);
+                setProductsCount(data.totalCount ?? 0);
             } else {
                 console.error('Error fetching product count', error);
                 setProductsCount(null);
+            }
+
+            const { dataOrders, errorOrders } = await getOrders();
+            if (!errorOrders) {
+                setOrdersCount(dataOrders.totalCount ?? 0);
+            } else {
+                console.error('Error fetching product count', errorOrders);
+                setOrdersCount(null);
             }
 
             setLoading(false);

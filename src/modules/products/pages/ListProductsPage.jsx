@@ -34,9 +34,8 @@ function ListProductsPage() {
       const { data, error } = await getProducts(searchTerm, status, pageNumber, pageSize);
 
       if (error) throw error;
-
-    setTotal(data.total ?? data.totalCount ?? 0);
-    setProducts(data.productItems ?? data.products ?? []);
+      setTotal(data.totalFiltered ?? 0);
+      setProducts(data.products ?? []);
     } catch (error) {
       console.error(error);
     } finally {

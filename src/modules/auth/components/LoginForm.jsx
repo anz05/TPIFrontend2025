@@ -38,7 +38,7 @@ function LoginForm() {
   };
 
   return (
-    <form className='
+      <form className='
         flex
         flex-col
         gap-20
@@ -48,29 +48,30 @@ function LoginForm() {
         sm:gap-4
         sm:rounded-lg
         sm:shadow-lg
+        
       '
-    onSubmit={handleSubmit(onValid)}
-    >
-      <Input
-        label='Usuario'
-        { ...register('username', {
-          required: 'Usuario es obligatorio',
-        }) }
-        error={errors.username?.message}
-      />
-      <Input
-        label='Contraseña'
-        { ...register('password', {
-          required: 'Contraseña es obligatorio',
-        }) }
-        type='password'
-        error={errors.password?.message}
-      />
+        onSubmit={handleSubmit(onValid)}
+      >
+        <Input
+          label='Usuario'
+          {...register('username', {
+            required: 'Usuario es obligatorio',
+          })}
+          error={errors.username?.message}
+        />
+        <Input
+          label='Contraseña'
+          {...register('password', {
+            required: 'Contraseña es obligatorio',
+          })}
+          type='password'
+          error={errors.password?.message}
+        />
 
-      <Button type='submit'>Iniciar Sesión</Button>
-      <Button variant='secondary' onClick={() => navigate('/signup')}>Registrar Usuario</Button>
-      {errorMessage && <p className='text-red-500'>{errorMessage}</p>}
-    </form>
+        <Button type='submit'>Iniciar Sesión</Button>
+        <Button variant='secondary' onClick={() => navigate('/signup')}>Registrar Usuario</Button>
+        {errorMessage && <p className='text-red-500'>{errorMessage}</p>}
+      </form>
   );
 };
 

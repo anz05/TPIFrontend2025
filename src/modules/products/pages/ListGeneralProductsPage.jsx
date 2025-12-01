@@ -58,7 +58,7 @@ function ListGeneralProductsPage() {
         const existingIndex = cart.findIndex(item => item.sku === product.sku);
 
         if (existingIndex > -1) {
-            cart[existingIndex].quantity = currentCount; 
+            cart[existingIndex].quantity = currentCount;
         } else {
             cart.push(newCartItem);
         }
@@ -72,17 +72,17 @@ function ListGeneralProductsPage() {
 
     const fetchProducts = async () => {
         try {
-        setLoading(true);
-        const { data, error } = await getGeneralProducts(searchTerm, pageNumber, pageSize);
+            setLoading(true);
+            const { data, error } = await getGeneralProducts(searchTerm, pageNumber, pageSize);
 
-        if (error) throw error;
+            if (error) throw error;
 
-        setTotal(data.total ?? data.totalCount ?? 0);
-        setProducts(data.productItems ?? data.products ?? []);
+            setTotal(data.total ?? data.totalCount ?? 0);
+            setProducts(data.productItems ?? data.products ?? []);
         } catch (error) {
-        console.error(error);
+            console.error(error);
         } finally {
-        setLoading(false);
+            setLoading(false);
         }
     };
 
@@ -93,69 +93,69 @@ function ListGeneralProductsPage() {
     const totalPages = Math.ceil(total / pageSize);
 
     const getLinkStyles = ({ isActive }) => (
-    `
+        `
         pl-4 w-25 block  pt-4 pb-4 rounded-4xl transition hover:bg-gray-100
         ${isActive
-        ? 'bg-gray-200 hover:bg-purple-100 '
-        : ''
+            ? 'bg-gray-200 hover:bg-purple-100 '
+            : ''
         }
         `
     );
 
     return (
-    <div>
-        <div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-4 gap-4 p-4">
+        <div>
+            <div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-4 gap-4 p-4">
 
-        {loading ? (
-            <span>Buscando datos...</span>
-        ) : (
-            products.map((product) => (
-            <StructuredCard
-            key={product.sku}
-            className="flex flex-col gap-3 p-3"
-            content={
-                <div className="flex flex-col gap-3">
+                {loading ? (
+                    <span>Buscando datos...</span>
+                ) : (
+                    products.map((product) => (
+                        <StructuredCard
+                            key={product.sku}
+                            className="flex flex-col gap-3 p-3"
+                            content={
+                                <div className="flex flex-col gap-3">
 
-                    <img
-                        src={image ?? product.image}
-                        alt={product.name}
-                        className="w-full rounded-lg object-cover h-80 sm:h-40 md:h-48"
-                    />
-                    <ResponsiveText as="h2" className="font-semibold">
-                        {product.name}
-                    </ResponsiveText>
-                    <ResponsiveText as="p" className="font-bold mt-1">
-                        ${product.currentUnitPrice}
-                    </ResponsiveText>
-                    <div className="flex items-center justify-between">
-                        <Counter
-                            stock={product.stockQuantity}
-                            count={selectedQuantities[product.sku] || 0}
-                            onCountChange={(count) => handleCountChange(product.sku, count)}
+                                    <img
+                                        src={image ?? product.image}
+                                        alt={product.name}
+                                        className="w-full rounded-lg object-cover h-80 sm:h-60 md:h-68"
+                                    />
+                                    <ResponsiveText as="h2" className="font-semibold">
+                                        {product.name}
+                                    </ResponsiveText>
+                                    <ResponsiveText as="p" className="font-bold mt-1">
+                                        ${product.currentUnitPrice}
+                                    </ResponsiveText>
+                                    <div className="flex items-center justify-between">
+                                        <Counter
+                                            stock={product.stockQuantity}
+                                            count={selectedQuantities[product.sku] || 0}
+                                            onCountChange={(count) => handleCountChange(product.sku, count)}
+                                        />
+
+                                        <Button onClick={() => handleAddToCart(product)}
+                                            className="bg-purple-200 hover:bg-purple-300 text-purple-800 px-4 py-2 rounded-xl">
+                                            Agregar
+                                        </Button>
+                                    </div>
+
+                                </div>
+                            }
                         />
+                    ))
+                )}
 
-                        <Button onClick={() => handleAddToCart(product)}
-                                className="bg-purple-200 hover:bg-purple-300 text-purple-800 px-4 py-2 rounded-xl">
-                            Agregar
-                        </Button>
-                    </div>
+            </div>
 
-                </div>
-            }
-        />
-        ))
-        )}
-
+            <Pagination
+                pageNumber={pageNumber}
+                totalPages={totalPages}
+                pageSize={pageSize}
+                setPageNumber={setPageNumber}
+                setPageSize={setPageSize}
+            />
         </div>
-
-        <Pagination
-        pageNumber={pageNumber}
-        totalPages={totalPages}
-        pageSize={pageSize}
-        setPageNumber={setPageNumber}
-        setPageSize={setPageSize}
-        />
-    </div>
     );
 }
 

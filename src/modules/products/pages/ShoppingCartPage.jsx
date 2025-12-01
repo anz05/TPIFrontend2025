@@ -19,7 +19,6 @@ function ShoppingCartPage() {
     const [isOpenLogin, setIsOpenLogin] = useState(false);
     const [isOpenInfo, setIsOpenInfo] = useState(false);
     const [isOpenSuccess, setIsOpenSuccess] = useState(false);
-
     const queryParams = new URLSearchParams(location.search);
     const urlSearchTerm = queryParams.get('search') || '';
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -193,7 +192,14 @@ function ShoppingCartPage() {
         };
 
         try {
-            const { error } = await createOrder(payload.customerId, orderItems, payload.shippingAddress, payload.billingAddress, payload.notes);
+            const { error } = await createOrder(
+                payload.customerId, 
+                orderItems, 
+                payload.shippingAddress, 
+                payload.billingAddress, 
+                payload.notes);
+
+            console.log('Order creation response:', { error });
 
             // if (error) {
             //     alert('Ocurrió un error al crear la orden. Intente de nuevo.');
@@ -213,7 +219,6 @@ function ShoppingCartPage() {
             setInfoOrden({ message: "¡Orden creada exitosamente!" }); 
             openSuccessModal();
 
-            return;
             // } catch (err) {
             //     alert('Error inesperado al crear la orden.');
             //     console.error('Unexpected error creating order:', err);
@@ -311,7 +316,7 @@ function ShoppingCartPage() {
                 </div>
             </Modal>
 
-            <Modal isOpen={isOpenInfo} onClose={() => !isSubmitting && setIsOpenInfo(false)}>
+            <Modal isOpen={isOpenInfo} onClose={() => { if (!isSubmitting) setIsOpenInfo(false); }}>
                 <div className="flex flex-col gap-3">
                     <ExtraInfoForm
                         onSubmit={handleOrderSubmission}

@@ -52,8 +52,8 @@ function ListOrdersPage() {
             : (Array.isArray(dataOrders.Orders) ? dataOrders.Orders : [])
           )
       );
-    } catch (errerrorOrdersor) {
-      console.error(errorOrders);
+    } catch (err) {
+      console.error('Error fetchOrders:', err);
     } finally {
       setLoading(false);
     }
@@ -66,6 +66,7 @@ function ListOrdersPage() {
   const totalPages = Math.ceil(total / pageSize);
 
   const handleSearch = async () => {
+    setPageNumber(1);
     await fetchOrders();
   };
 

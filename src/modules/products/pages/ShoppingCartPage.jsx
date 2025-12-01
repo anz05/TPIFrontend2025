@@ -131,13 +131,13 @@ function ShoppingCartPage() {
             className="mb-2"
             title={item.name}
             content={
-                <div className="flex flex-col">
+                <div className="flex flex-col text-2xl">
 
-                <ResponsiveText as="p" className="text-gray-600">
+                <ResponsiveText as="p" className="text-gray-600 text-xl">
                     Cantidad de productos: {item.quantity}
                 </ResponsiveText>
 
-                <ResponsiveText as="p" className="text-gray-600">
+                <ResponsiveText as="p" className="text-gray-600 text-xl">
                     Sub Total: ${((item.quantity || 0) * (item.unitPrice || 0)).toFixed(2)}
                 </ResponsiveText>
 

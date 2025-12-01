@@ -26,8 +26,12 @@ function LoginForm() {
 
         return;
       }
-
-      navigate('/admin/home');
+      if (localStorage.getItem('customerId') === null) {
+        navigate('/admin/home');
+      }else{
+        navigate('/');
+      }
+      
     } catch (error) {
       if (error?.response?.data?.code) {
         setErrorMessage(frontendErrorMessage[error?.response?.data?.code]);

@@ -16,7 +16,6 @@ import ResponsiveText from '../../shared/components/ResponsiveText';
 function ListGeneralProductsPage() {
     const navigate = useNavigate();
 
-    const [searchTerm, setSearchTerm] = useState('');
     const [pageNumber, setPageNumber] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
@@ -26,6 +25,9 @@ function ListGeneralProductsPage() {
     const [loading, setLoading] = useState(false);
 
     const [selectedQuantities, setSelectedQuantities] = useState({});
+
+    const queryParams = new URLSearchParams(location.search);
+    const urlSearchTerm = queryParams.get('search') || '';
 
     const handleCountChange = (sku, count) => {
         setSelectedQuantities(prev => ({
@@ -50,6 +52,7 @@ function ListGeneralProductsPage() {
             console.error('Error al leer el carrito de localStorage:', error);
         }
         const newCartItem = {
+            productId: product.id,
             sku: product.sku,
             name: product.name,
             unitPrice: product.currentUnitPrice,
@@ -73,12 +76,12 @@ function ListGeneralProductsPage() {
     const fetchProducts = async () => {
         try {
             setLoading(true);
-            const { data, error } = await getGeneralProducts(searchTerm, pageNumber, pageSize);
+            const { data, error } = await getGeneralProducts(urlSearchTerm, pageNumber, pageSize);
 
             if (error) throw error;
 
-            setTotal(data.total ?? data.totalCount ?? 0);
-            setProducts(data.productItems ?? data.products ?? []);
+            setTotal(data.totalCount ?? 0);
+            setProducts(data.products ?? []);
         } catch (error) {
             console.error(error);
         } finally {
@@ -88,7 +91,7 @@ function ListGeneralProductsPage() {
 
     useEffect(() => {
         fetchProducts();
-    }, [pageSize, pageNumber]);
+    }, [pageSize, pageNumber, urlSearchTerm]);
 
     const totalPages = Math.ceil(total / pageSize);
 

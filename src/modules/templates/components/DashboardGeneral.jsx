@@ -12,14 +12,23 @@ import RegisterForm from '../../auth/components/RegisterForm';
 
 function DashboardGeneral() {
   const [openMenu, setOpenMenu] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  //const [searchTerm, setSearchTerm] = useState('');
 
   const [loading, setLoading] = useState(false);
 
-  const handleSearch = async () => {
-    //FALTA AGREGAR FUNCIONALIDAD DE BUSQUEDA
-  };
-
+  // const handleSearch = async () => {
+  //   //FALTA AGREGAR FUNCIONALIDAD DE BUSQUEDA
+  // };
+const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const query = e.target.elements.search.value; 
+    navigate(`/?search=${encodeURIComponent(query)}`); 
+    if (location.pathname !== '/') {
+        navigate(`/?search=${encodeURIComponent(query)}`);
+    } else {
+        navigate({ search: `?search=${encodeURIComponent(query)}` });
+    }
+};
   const location = useLocation();
 
   const navigate = useNavigate();
@@ -29,10 +38,6 @@ function DashboardGeneral() {
 
   const { singOut } = useAuth();
 
-  // const logout = () => {
-  //   singOut();
-  //   navigate('/login');
-  // };
   const openLoginModal = () => {
     setIsOpenLogin(true);
   };
@@ -96,28 +101,49 @@ function DashboardGeneral() {
     </nav>
   );
 
-  const renderSearchBar = () => (
-    <div className='flex items-center border border-gray-300 rounded-full px-4 py-2 w-full max-w-sm'>
-      <input 
-        value={searchTerm} 
-        onChange={(evt) => setSearchTerm(evt.target.value)} 
-        type="text" 
-        placeholder='Search'
-        className='text-base w-full focus:outline-none' 
-      />
-      <button 
-        className='ml-2 text-gray-500 hover:text-gray-700' 
-        onClick={handleSearch}
-      >
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className='h-5 w-5'>
-          <g id="SVGRepo_iconCarrier"> 
-            <path d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> 
-          </g>
-        </svg>
-      </button>
-    </div>
-  );
-
+  // const renderSearchBar = () => (
+  //   <div className='flex items-center border border-gray-300 rounded-full px-4 py-2 w-full max-w-sm'>
+  //     <input 
+  //       value={searchTerm} 
+  //       onChange={(evt) => setSearchTerm(evt.target.value)} 
+  //       type="text" 
+  //       placeholder='Search'
+  //       className='text-base w-full focus:outline-none' 
+  //     />
+  //     <button 
+  //       className='ml-2 text-gray-500 hover:text-gray-700' 
+  //       onClick={handleSearch}
+  //     >
+  //       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className='h-5 w-5'>
+  //         <g id="SVGRepo_iconCarrier"> 
+  //           <path d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> 
+  //         </g>
+  //       </svg>
+  //     </button>
+  //   </div>
+  // );
+const renderSearchBar = () => (
+    <form
+        onSubmit={handleSearchSubmit}
+        className="flex items-center flex-1 mx-3 border border-gray-300 rounded-lg h-9 overflow-hidden"
+    >
+        <input
+            type="text"
+            name="search" 
+            placeholder="Search"
+            className="w-full p-2 outline-none text-gray-700 text-sm"
+            defaultValue={new URLSearchParams(location.search).get('search') || ''} 
+        />
+        <button
+            type="submit"
+            className="bg-white p-2 text-gray-500 hover:text-purple-600 transition h-full"
+        >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </button>
+    </form>
+);
 
   const renderMobileNavLinks = () => (
     <ul className='flex flex-col'>

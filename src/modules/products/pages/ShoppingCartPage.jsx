@@ -1,5 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+
 import Button from "../../shared/components/Button";
 import StructuredCard from "../../shared/components/StructuredCard";
 import Counter from "../../shared/components/Counter";
@@ -7,12 +6,17 @@ import ResponsiveText from "../../shared/components/ResponsiveText";
 import Modal from "../../shared/components/Modal";
 import Input from "../../shared/components/Input";
 import LoginForm from "../../auth/components/LoginForm";
+import { useEffect, useState, useCallback, useMemo } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function ShoppingCartPage() {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [cartItems, setCartItems] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
+    const queryParams = new URLSearchParams(location.search);
+    const urlSearchTerm = queryParams.get('search') || '';
 
     const loadCartFromLocalStorage = useCallback(() => {
         try {
@@ -67,6 +71,19 @@ function ShoppingCartPage() {
         },
         [updateCartItemQuantity]
     );
+
+    const filteredCartItems = useMemo(() => {
+        const term = urlSearchTerm.toLowerCase().trim();
+        if (!term) {
+            return cartItems; 
+        }
+        
+        return cartItems.filter(item => 
+            item.name.toLowerCase().includes(term) ||
+            item.sku.toLowerCase().includes(term)
+        );
+    }, [cartItems, urlSearchTerm]);
+
     const { totalQuantity, totalPrice } = useMemo(() => {
         let totalQty = 0;
         let totalPrc = 0;
@@ -109,12 +126,15 @@ function ShoppingCartPage() {
         if (!token) {
             openLoginModal();
             return;
+        }else{
+            alert(`Orden gestionada. Total a pagar: $${totalPrice}`);
+            
+            setCartItems([]);
+            localStorage.removeItem("cart");
+            navigate("/");
         }
 
-        alert(`Orden gestionada. Total a pagar: $${totalPrice}`);
-        setCartItems([]);
-        localStorage.removeItem("cart");
-        navigate("/");
+        
     };
 
     const redirectToAuth = (path) => {
@@ -125,7 +145,7 @@ function ShoppingCartPage() {
     return (
     <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 px-4 py-6">
         <div className="lg:col-span-2 flex flex-col pb-40">
-        {cartItems.map((item) => (
+        {filteredCartItems.map((item) => (
             <StructuredCard
             key={item.sku}
             className="mb-2"

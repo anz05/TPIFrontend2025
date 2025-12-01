@@ -22,9 +22,10 @@ function AuthProvider({ children }) {
       return { error };
     }
 
-    localStorage.setItem('token', data);
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('customerId', data.customerId);
+    localStorage.setItem('customerEmail', data.customerEmail);
     setIsAuthenticated(true);
-
     return { error: null };
   };
 

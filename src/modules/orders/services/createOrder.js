@@ -1,13 +1,13 @@
 import { instance } from '../../shared/api/axiosInstance';
 
-export const createOrder = async (customerId, orderItems) => {
+export const createOrder = async (customerId, orderItems, shippingAddress, billingAddress, notes) => {
   try {
     console.log('Enviando orden:', { customerId, orderItems });
     const response = await instance.post('/api/orders', 
       {
-        shippingAddress: "Direccion de envio de ejemplo",
-        billingAddress: "Direccion de facturacion de ejemplo",
-        notes: "Notas de ejemplo",
+        shippingAddress: shippingAddress,
+        billingAddress: billingAddress,
+        notes: notes,
         customerId: customerId,
         orderItems: orderItems,
     });

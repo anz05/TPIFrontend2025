@@ -26,7 +26,7 @@ function LoginForm() {
 
         return;
       }
-      if (localStorage.getItem('customerId') === null) {
+      if (localStorage.getItem('customerId') == "null") {
         navigate('/admin/home');
       }else{
         navigate('/');

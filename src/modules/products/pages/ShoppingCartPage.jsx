@@ -9,15 +9,19 @@ import LoginForm from "../../auth/components/LoginForm";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { createOrder } from "../../orders/services/createOrder";
+import ExtraInfoForm from "../../orders/componentes/ExtraInfoForm";
+import { frontendErrorMessage } from "../../orders/helpers/backendError";
 
 function ShoppingCartPage() {
     const navigate = useNavigate();
     const location = useLocation();
-
+    const [errorMessage, setErrorMessage] = useState('');
     const [cartItems, setCartItems] = useState([]);
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpenLogin, setIsOpenLogin] = useState(false);
+    const [isOpenInfo, setIsOpenInfo] = useState(false);
     const queryParams = new URLSearchParams(location.search);
     const urlSearchTerm = queryParams.get('search') || '';
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const loadCartFromLocalStorage = useCallback(() => {
         try {
@@ -90,11 +94,11 @@ function ShoppingCartPage() {
         let totalPrc = 0;
 
         cartItems.forEach((item) => {
-        const quantity = Number(item.quantity) || 0;
-        const price = Number(item.unitPrice) || 0;
+            const quantity = Number(item.quantity) || 0;
+            const price = Number(item.unitPrice) || 0;
 
-        totalQty += quantity;
-        totalPrc += quantity * price;
+            totalQty += quantity;
+            totalPrc += quantity * price;
         });
 
         return {
@@ -118,8 +122,11 @@ function ShoppingCartPage() {
     }
 
     const openLoginModal = () => {
-        setIsOpen(true);
+        setIsOpenLogin(true);
     };
+    const openInfoForm = () => {
+        setIsOpenInfo(true);
+    }
 
     const manageOrder = async () => {
         const token = localStorage.getItem("token");
@@ -136,8 +143,9 @@ function ShoppingCartPage() {
             return;
         }
 
-        if (customerId === null) {
+        if (customerId == 'null') {
             alert("No es un cliente. Por favor, inicie sesión como cliente.");
+            openLoginModal();
             return;
         }
 
@@ -145,29 +153,61 @@ function ShoppingCartPage() {
             alert("El carrito está vacío o contiene productos no válidos.");
             return;
         }
+        openInfoForm();
+    };
+
+    const handleOrderSubmission = async (extraInfo) => {
+        setIsSubmitting(true);
+        const customerId = localStorage.getItem("customerId");
+        const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        const orderItems = storedCart.map((item) => ({
+            productId: item.productId,
+            quantity: Number(item.quantity) || 0,
+        }));
+
+        const payload = {
+            shippingAddress: extraInfo.shippingAdress,
+            billingAddress: extraInfo.billingAdress,
+            notes: extraInfo.notes,
+            customerId: customerId,
+            orderItems: orderItems,
+        };
 
         try {
-            const { data, error } = await createOrder(customerId, orderItems);
+            const { error } = await createOrder(payload.customerId, orderItems, payload.shippingAddress, payload.billingAddress, payload.notes);
+            
+            // if (error) {
+            //     alert('Ocurrió un error al crear la orden. Intente de nuevo.');
+            //     console.error('Error creating order:', error);
+            //     return;
+            // }
+
             if (error) {
-                console.error('Error creating order:', error);
-                alert('Ocurrió un error al crear la orden. Intente de nuevo.');
+                setErrorMessage(error.frontendErrorMessage);
                 return;
             }
+
+            setIsOpenInfo(false);
             setCartItems([]);
             localStorage.removeItem('cart');
             navigate('/');
-        } catch (error) {
-            console.error('Unexpected error creating order:', error);
-            if (error.response && error.response.data) {
-                console.error('Detalles del error 400 del servidor:', error.response.data);
-            }
-            alert('Error inesperado al crear la orden.');
-        }
-    };
+            alert('¡Orden creada exitosamente!');
 
-    const redirectToAuth = (path) => {
-        setIsOpen(false);
-        navigate(path);   
+        // } catch (err) {
+        //     alert('Error inesperado al crear la orden.');
+        //     console.error('Unexpected error creating order:', err);
+        // } 
+        }catch (error) {
+        if (error?.response?.data?.code) {
+            setErrorMessage(frontendErrorMessage[error?.response?.data?.code]);
+        } else {
+            setErrorMessage('Llame a soporte');
+        }
+        }
+        finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -234,11 +274,21 @@ function ShoppingCartPage() {
             >
         </StructuredCard>
 
-        <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <Modal isOpenLogin={isOpenLogin} onClose={() => setIsOpenLogin(false)}>
             <div className="flex flex-col gap-3">
                 <LoginForm />
             </div>
         </Modal>
+
+        <Modal isOpen={isOpenInfo} onClose={() => !isSubmitting && setIsOpenInfo(false)}>
+                <div className="flex flex-col gap-3">
+                    <ExtraInfoForm 
+                        onSubmit={handleOrderSubmission} 
+                        onCancel={() => setIsOpenInfo(false)}
+                        isLoading={isSubmitting}
+                    />
+                </div>
+            </Modal>
     </div>
     );
 }

@@ -14,13 +14,16 @@ import { frontendErrorMessage } from "../../orders/helpers/backendError";
 function ShoppingCartPage() {
     const navigate = useNavigate();
     const location = useLocation();
-    const [errorMessage, setErrorMessage] = useState('');
+    const [errors, setErrors] = useState({});
     const [cartItems, setCartItems] = useState([]);
     const [isOpenLogin, setIsOpenLogin] = useState(false);
     const [isOpenInfo, setIsOpenInfo] = useState(false);
     const queryParams = new URLSearchParams(location.search);
     const urlSearchTerm = queryParams.get('search') || '';
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const [modalPedidoCorrecto, setModalPedidoCorrecto] = useState(false);
+    const [infoOrden, setInfoOrden] = useState({});
 
     const loadCartFromLocalStorage = useCallback(() => {
         try {
@@ -137,22 +140,34 @@ function ShoppingCartPage() {
             quantity: Number(item.quantity) || 0,
         }));
 
-        if (!token) {
+        if (!token || token === "null" || token.length < 10) {
+            setErrors(prev => ({ ...prev, customerId: "Debes iniciar sesión para continuar" }));
             openLoginModal();
             return;
         }
 
-        if (customerId == 'null') {
-            alert("No es un cliente. Por favor, inicie sesión como cliente.");
+        if (!customerId || customerId === "null") {
+            setErrors(prev => ({ ...prev, customerId: "No es un cliente válido" }));
             openLoginModal();
             return;
         }
 
         if (orderItems.length === 0) {
-            alert("El carrito está vacío o contiene productos no válidos.");
+            setErrors(prev => ({
+                ...prev,
+                orderItems: "El carrito está vacío o contiene productos no válidos."
+            }));
             return;
         }
         openInfoForm();
+
+        setErrors(prev => ({
+            ...prev,
+            customerId: null,
+            orderItems: null
+        }));
+
+
     };
 
     const handleOrderSubmission = async (extraInfo) => {
@@ -175,7 +190,7 @@ function ShoppingCartPage() {
 
         try {
             const { error } = await createOrder(payload.customerId, orderItems, payload.shippingAddress, payload.billingAddress, payload.notes);
-            
+
             // if (error) {
             //     alert('Ocurrió un error al crear la orden. Intente de nuevo.');
             //     console.error('Error creating order:', error);
@@ -190,19 +205,21 @@ function ShoppingCartPage() {
             setIsOpenInfo(false);
             setCartItems([]);
             localStorage.removeItem('cart');
-            navigate('/');
-            alert('¡Orden creada exitosamente!');
-            
-        // } catch (err) {
-        //     alert('Error inesperado al crear la orden.');
-        //     console.error('Unexpected error creating order:', err);
-        // } 
-        }catch (error) {
-        if (error?.response?.data?.code) {
-            setErrorMessage(frontendErrorMessage[error?.response?.data?.code]);
-        } else {
-            setErrorMessage('Llame a soporte');
-        }
+
+            setInfoOrden({ message: "¡Orden creada exitosamente!" });
+            setModalPedidoCorrecto(true);
+
+            return;
+            // } catch (err) {
+            //     alert('Error inesperado al crear la orden.');
+            //     console.error('Unexpected error creating order:', err);
+            // } 
+        } catch (error) {
+            if (error?.response?.data?.code) {
+                setErrorMessage(frontendErrorMessage[error?.response?.data?.code]);
+            } else {
+                setErrorMessage('Llame a soporte');
+            }
         }
         finally {
             setIsSubmitting(false);
@@ -260,14 +277,27 @@ function ShoppingCartPage() {
                 }
                 actions={
                     <>
+                        {errors.customerId && (
+                            <p className="text-red-600 text-sm mt-2">
+                                {errors.customerId}
+                            </p>
+                        )}
+
+                        {errors.orderItems && (
+                            <p className="text-red-600 text-sm mt-2">
+                                {errors.orderItems}
+                            </p>
+                        )}
                         <Button className="w-full mt-2 font-semibold" onClick={manageOrder}>Finalizar compra</Button>
                     </>
                 }
                 contentClassName={'flex flex-col'}
+
+
             >
             </StructuredCard>
 
-            <Modal isOpenLogin={isOpenLogin} onClose={() => setIsOpenLogin(false)}>
+            <Modal isOpen={isOpenLogin} onClose={() => setIsOpenLogin(false)}>
                 <div className="flex flex-col gap-3">
                     <LoginForm />
                 </div>
@@ -275,13 +305,58 @@ function ShoppingCartPage() {
 
             <Modal isOpen={isOpenInfo} onClose={() => !isSubmitting && setIsOpenInfo(false)}>
                 <div className="flex flex-col gap-3">
-                    <ExtraInfoForm 
-                        onSubmit={handleOrderSubmission} 
+                    <ExtraInfoForm
+                        onSubmit={handleOrderSubmission}
                         onCancel={() => setIsOpenInfo(false)}
                         isLoading={isSubmitting}
                     />
                 </div>
             </Modal>
+
+            <Modal isOpen={modalPedidoCorrecto} onClose={() => setModalPedidoCorrecto(false)}>
+                <div className="flex flex-col items-center text-center gap-4">
+
+                    <div className="w-20 h-20 flex items-center justify-center bg-green-100 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            className="h-12 w-12 text-green-600"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+
+                    <h2 className="text-2xl font-semibold text-gray-800">
+                        ¡Orden creada exitosamente!
+                    </h2>
+
+                    <p className="text-gray-600">
+                        Tu compra fue registrada correctamente.
+                    </p>
+
+                    <div className="flex w-full gap-4 mt-4">
+                        <button
+                            onClick={() => {
+                                setModalPedidoCorrecto(false);
+                                navigate('/');
+                            }}
+                            className="flex-1 bg-gray-100 hover:bg-gray-200 py-2 rounded-xl font-semibold"
+                        >
+                            Seguir comprando
+                        </button>
+
+                        <button
+                            onClick={() => {
+                                setModalPedidoCorrecto(false);
+                                navigate('/orders');
+                            }}
+                            className="flex-1 bg-purple-200 hover:bg-purple-100 py-2 rounded-xl font-semibold"
+                        >
+                            Ver mis órdenes
+                        </button>
+                    </div>
+
+                </div>
+            </Modal>
+
         </div>
     );
 }

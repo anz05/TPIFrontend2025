@@ -10,7 +10,7 @@ import Pagination from '../../shared/components/Pagination';
 import StructuredCard from '../../shared/components/StructuredCard';
 import Counter from '../../shared/components/Counter';
 import ResponsiveText from '../../shared/components/ResponsiveText';
-
+import Modal from '../../shared/components/Modal';
 
 
 function ListGeneralProductsPage() {
@@ -21,10 +21,15 @@ function ListGeneralProductsPage() {
 
     const [total, setTotal] = useState(0);
     const [products, setProducts] = useState([]);
-
     const [loading, setLoading] = useState(false);
 
+    const [modalInfo, setModalInfo] = useState({
+        open: false,
+        productName: "",
+    });
+
     const [selectedQuantities, setSelectedQuantities] = useState({});
+    const [errors, setErrors] = useState({});
 
     const queryParams = new URLSearchParams(location.search);
     const urlSearchTerm = queryParams.get('search') || '';
@@ -39,9 +44,18 @@ function ListGeneralProductsPage() {
     const handleAddToCart = (product) => {
         const currentCount = selectedQuantities[product.sku] || 0;
         if (currentCount < 1) {
-            alert('Debes agregar al menos 1 producto.');
+            setErrors(prev => ({
+                ...prev,
+                [product.sku]: "Debes agregar al menos 1 producto."
+            }));
             return;
         }
+
+        setErrors(prev => ({
+            ...prev,
+            [product.sku]: null
+        }));
+
         let cart = [];
         try {
             const storedCart = localStorage.getItem('cart');
@@ -67,7 +81,12 @@ function ListGeneralProductsPage() {
         }
         try {
             localStorage.setItem('cart', JSON.stringify(cart));
-            alert(`${currentCount} unidades de ${product.name} añadidas al carrito!`);
+
+            setModalInfo({
+                open: true,
+                productName: product.name
+            });
+
         } catch (error) {
             console.error('Error al guardar el carrito en localStorage:', error);
         }
@@ -142,7 +161,11 @@ function ListGeneralProductsPage() {
                                             Agregar
                                         </Button>
                                     </div>
-
+                                    {errors[product.sku] && (
+                                        <p className="text-red-600 text-sm mt-1">
+                                            {errors[product.sku]}
+                                        </p>
+                                    )}
                                 </div>
                             }
                         />
@@ -158,6 +181,38 @@ function ListGeneralProductsPage() {
                 setPageNumber={setPageNumber}
                 setPageSize={setPageSize}
             />
+
+            <Modal
+                isOpen={modalInfo.open}
+                onClose={() => setModalInfo({ open: false, productName: "" })}
+            >
+                <h2 className="text-lg font-semibold mb-4">Agregaste a tu carrito:</h2>
+
+                <p className="text-gray-700 mb-6">
+                    <strong>{modalInfo.productName}</strong>
+                </p>
+
+                <div className="flex justify-between gap-3">
+                    <button
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded w-1/2"
+                        onClick={() => setModalInfo({ open: false, productName: "" })}
+                    >
+                        Ver más productos
+                    </button>
+
+                    <button
+                        className="bg-purple-200 hover:bg-purple-300 text-purple-800 px-4 py-2 rounded w-1/2"
+                        onClick={() => {
+                            setModalInfo({ open: false, productName: "" });
+                            navigate("/cart");
+                        }}
+                    >
+                        Ir al carrito
+                    </button>
+                </div>
+            </Modal>
+
+
         </div>
     );
 }

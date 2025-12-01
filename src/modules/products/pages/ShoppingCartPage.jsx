@@ -18,11 +18,13 @@ function ShoppingCartPage() {
     const [cartItems, setCartItems] = useState([]);
     const [isOpenLogin, setIsOpenLogin] = useState(false);
     const [isOpenInfo, setIsOpenInfo] = useState(false);
+    const [isOpenSuccess, setIsOpenSuccess] = useState(false);
+
     const queryParams = new URLSearchParams(location.search);
     const urlSearchTerm = queryParams.get('search') || '';
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const [modalPedidoCorrecto, setModalPedidoCorrecto] = useState(false);
+    //const [modalPedidoCorrecto, setModalPedidoCorrecto] = useState(false);
     const [infoOrden, setInfoOrden] = useState({});
 
     const loadCartFromLocalStorage = useCallback(() => {
@@ -129,6 +131,10 @@ function ShoppingCartPage() {
     const openInfoForm = () => {
         setIsOpenInfo(true);
     }
+    const openSuccessModal=() =>{
+        setIsOpenSuccess(true);
+    }
+
 
     const manageOrder = async () => {
         const token = localStorage.getItem("token");
@@ -140,13 +146,13 @@ function ShoppingCartPage() {
             quantity: Number(item.quantity) || 0,
         }));
 
-        if (!token || token === "null" || token.length < 10) {
+        if (!token || token.length < 10) {
             setErrors(prev => ({ ...prev, customerId: "Debes iniciar sesión para continuar" }));
             openLoginModal();
             return;
         }
 
-        if (!customerId || customerId === "null") {
+        if (customerId == "null") {
             setErrors(prev => ({ ...prev, customerId: "No es un cliente válido" }));
             openLoginModal();
             return;
@@ -166,8 +172,6 @@ function ShoppingCartPage() {
             customerId: null,
             orderItems: null
         }));
-
-
     };
 
     const handleOrderSubmission = async (extraInfo) => {
@@ -195,7 +199,7 @@ function ShoppingCartPage() {
             //     alert('Ocurrió un error al crear la orden. Intente de nuevo.');
             //     console.error('Error creating order:', error);
             //     return;
-            // }
+            // } esto de los errores ya anda todo bien?
 
             if (error) {
                 setErrorMessage(error.frontendErrorMessage);
@@ -206,8 +210,8 @@ function ShoppingCartPage() {
             setCartItems([]);
             localStorage.removeItem('cart');
 
-            setInfoOrden({ message: "¡Orden creada exitosamente!" });
-            setModalPedidoCorrecto(true);
+            setInfoOrden({ message: "¡Orden creada exitosamente!" }); 
+            openSuccessModal();
 
             return;
             // } catch (err) {
@@ -267,7 +271,11 @@ function ShoppingCartPage() {
             </div>
 
             <StructuredCard
-                className="h-fit lg:justify-end fixed bottom-0 left-0 right-0 px-4 lg:px-5 lg:static lg:w-auto z-20"
+                className="fixed bottom-0 left-0 right-0
+                    sm:static sm:w-full sm:h-[calc(100vh-160px)]
+                    sm:top-4 lg:sticky
+                    z-20
+                    flex flex-col"
                 title="Detalle del pedido"
                 content={
                     <>
@@ -313,9 +321,8 @@ function ShoppingCartPage() {
                 </div>
             </Modal>
 
-            <Modal isOpen={modalPedidoCorrecto} onClose={() => setModalPedidoCorrecto(false)}>
+            <Modal isOpen={isOpenSuccess} onClose={() => setIsOpenSuccess(false)}>
                 <div className="flex flex-col items-center text-center gap-4">
-
                     <div className="w-20 h-20 flex items-center justify-center bg-green-100 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg"
                             className="h-12 w-12 text-green-600"
@@ -335,25 +342,14 @@ function ShoppingCartPage() {
                     <div className="flex w-full gap-4 mt-4">
                         <button
                             onClick={() => {
-                                setModalPedidoCorrecto(false);
+                                setIsOpenSuccess(false);
                                 navigate('/');
                             }}
                             className="flex-1 bg-gray-100 hover:bg-gray-200 py-2 rounded-xl font-semibold"
                         >
                             Seguir comprando
                         </button>
-
-                        <button
-                            onClick={() => {
-                                setModalPedidoCorrecto(false);
-                                navigate('/orders');
-                            }}
-                            className="flex-1 bg-purple-200 hover:bg-purple-100 py-2 rounded-xl font-semibold"
-                        >
-                            Ver mis órdenes
-                        </button>
                     </div>
-
                 </div>
             </Modal>
 

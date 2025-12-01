@@ -6,6 +6,8 @@ import CardContent from '../../shared/components/CardContent';
 import { getOrders } from '../services/list';
 import StructuredCard from '../../shared/components/StructuredCard';
 import Pagination from '../../shared/components/Pagination';
+import SearchBar from '../../shared/components/SearchBar';
+import ResponsiveText from '../../shared/components/ResponsiveText';
 
 const orderStatus = {
   ALL: 'all',
@@ -27,6 +29,11 @@ function ListOrdersPage() {
   const [ orders, setOrders ] = useState([]);
 
   const [loading, setLoading] = useState(false);
+  const [openOrderId, setOpenOrderId] = useState(null);
+
+  const handleClicked = (id) => {
+    setOpenOrderId(prev => prev === id ? null : id);
+  };
 
   const fetchOrders = async () => {
     try {
@@ -57,7 +64,6 @@ function ListOrdersPage() {
   }, [status, pageSize, pageNumber]);
 
   const totalPages = Math.ceil(total / pageSize);
-  const isTotalZero = total === 0;
 
   const handleSearch = async () => {
     await fetchOrders();
@@ -65,56 +71,79 @@ function ListOrdersPage() {
 
   return (
     <div>
-      <Card>
-        <div
-          className='flex justify-between items-center mb-3'
-        >
-          <h1 className='text-3xl'>Ordenes</h1>
-          <Button
-            className='h-11 w-11 rounded-2xl sm:hidden'
-          >
-            <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 11C4.44772 11 4 10.5523 4 10C4 9.44772 4.44772 9 5 9H15C15.5523 9 16 9.44772 16 10C16 10.5523 15.5523 11 15 11H5Z" fill="#000000"></path> <path d="M9 5C9 4.44772 9.44772 4 10 4C10.5523 4 11 4.44772 11 5V15C11 15.5523 10.5523 16 10 16C9.44772 16 9 15.5523 9 15V5Z" fill="#000000"></path> </g></svg>
-          </Button>
-
-        </div>
-
-        <div className='flex flex-col sm:flex-row gap-4'>
-          <div
+      <StructuredCard
+        className="mb-4 p-4"
+        title="Ordenes"
+        actions={
+          <>
+            <div
             className='flex items-center gap-3'
-          >
-            <input value={searchTerm} onChange={(evt) => setSearchTerm(evt.target.value)} type="text" placeholder='Buscar' className='text-[1.3rem] w-full' />
-            <Button className='h-11 w-11' onClick={handleSearch}>
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>
-            </Button>
-          </div>
-          <select onChange={evt => setStatus(evt.target.value)} className='text-[1.3rem]'>
-            <option value={orderStatus.ALL}>Todas</option>
-            <option value={orderStatus.PENDING}>Pendientes</option>
-            <option value={orderStatus.PROCESSING}>En Proceso</option>
-            <option value={orderStatus.SHIPPED}>Enviadas</option>
-            <option value={orderStatus.DELIVERED}>Entregadas</option>
-          </select>
-        </div>
-      </Card>
+            >
+              <SearchBar
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                handleSearch={handleSearch}
+              ></SearchBar>
+            </div>
+            <select onChange={evt => setStatus(evt.target.value)} className='text-[1.3rem]'>
+              <option value={orderStatus.ALL}>Todas</option>
+              <option value={orderStatus.PENDING}>Pendientes</option>
+              <option value={orderStatus.PROCESSING}>En Proceso</option>
+              <option value={orderStatus.SHIPPED}>Enviadas</option>
+              <option value={orderStatus.DELIVERED}>Entregadas</option>
+            </select>
+          </>
+        }
+        actionsClassName={"flex flex-row justify-between flex-wrap"}
+
+        ></StructuredCard>
+
 
       <div className='mt-4 flex flex-col gap-4'>
         {
           loading
-            ? <span>Buscando datos...</span>
+            ? <ResponsiveText>Buscando datos...</ResponsiveText>
             : orders.map(order => (
               <StructuredCard
                 key={order.Guid}
                 className="flex flex-col"
                 title={`Orden #${order.id} - ${order.customerName}`}
                 content={
-                  <>Estado: {order.status} | Total: ${order.totalAmount}
+                  <><ResponsiveText as='p'>Estado: {order.status} | Total: ${order.totalAmount}</ResponsiveText>
+                    {openOrderId === order.id && (
+                      <div className='flex flex-wrap'>
+                        <ol className='p-1'>
+                          <li><ResponsiveText>Fecha: {order.date.slice(0,10)}</ResponsiveText></li>
+                          <li><ResponsiveText>Direccion de entrega: {order.shippingAddress}</ResponsiveText></li>
+                          <li><ResponsiveText>Direccion de facturacion: {order.billingAddress}</ResponsiveText></li>
+                          <li><ResponsiveText>Notas: {order.notes}</ResponsiveText></li>
+                          <li><ResponsiveText>Items:</ResponsiveText></li>
+                          <li>
+                            {order.orderItems?.map((item) => (
+                              <div key={item.productId}>
+                                <ResponsiveText>- {item.name} | {item.quantity}</ResponsiveText>
+                              </div>
+                              ))}
+                          </li>
+                        </ol>
+                      </div>
+                    )}
                   </>
                 }
                 actions={
                   <>
-                    <Button onClick={() => navigate(`/orders/${order.Guid}`)}>Ver</Button>
+                    <Button onClick={() => handleClicked(order.id)}>
+                      {!openOrderId
+                          ? "Ver"
+                          : openOrderId === order.id
+                            ? "Ocultar"
+                            : "Ver"
+                      }
+                    </Button>
                   </>
                 }
+                titleClassName={'font-semibold text-xl'}
+                contentClassName={'text-xs'}
               ></StructuredCard>
             ))
         }

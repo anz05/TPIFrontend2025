@@ -12,13 +12,9 @@ import RegisterForm from '../../auth/components/RegisterForm';
 
 function DashboardGeneral() {
   const [openMenu, setOpenMenu] = useState(false);
-  //const [searchTerm, setSearchTerm] = useState('');
 
   const [loading, setLoading] = useState(false);
 
-  // const handleSearch = async () => {
-  //   //FALTA AGREGAR FUNCIONALIDAD DE BUSQUEDA
-  // };
 const handleSearchSubmit = (e) => {
     e.preventDefault();
     const query = e.target.elements.search.value; 
@@ -101,27 +97,6 @@ const handleSearchSubmit = (e) => {
     </nav>
   );
 
-  // const renderSearchBar = () => (
-  //   <div className='flex items-center border border-gray-300 rounded-full px-4 py-2 w-full max-w-sm'>
-  //     <input 
-  //       value={searchTerm} 
-  //       onChange={(evt) => setSearchTerm(evt.target.value)} 
-  //       type="text" 
-  //       placeholder='Search'
-  //       className='text-base w-full focus:outline-none' 
-  //     />
-  //     <button 
-  //       className='ml-2 text-gray-500 hover:text-gray-700' 
-  //       onClick={handleSearch}
-  //     >
-  //       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className='h-5 w-5'>
-  //         <g id="SVGRepo_iconCarrier"> 
-  //           <path d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> 
-  //         </g>
-  //       </svg>
-  //     </button>
-  //   </div>
-  // );
 const renderSearchBar = () => (
     <form
         onSubmit={handleSearchSubmit}
@@ -143,6 +118,8 @@ const renderSearchBar = () => (
             </svg>
         </button>
     </form>
+    
+
 );
 
   const renderMobileNavLinks = () => (

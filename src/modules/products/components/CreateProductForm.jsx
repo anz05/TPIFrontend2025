@@ -40,7 +40,6 @@ function CreateProductForm() {
     };
       
       await createProduct(payload);
-
       navigate('/admin/products');
     } catch (error) {
       if (error.response?.data?.detail) {

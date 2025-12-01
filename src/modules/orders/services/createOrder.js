@@ -1,12 +1,19 @@
 import { instance } from '../../shared/api/axiosInstance';
 
-export const createOrder = async (formData) => {
-  console.log("Enviando orden:", formData);
-
-  return await instance.post('/api/orders', {
-    shippingAddress: 'formData.shippingAddress',
-    billingAddress: 'formData.billingAddress',
-    customerId: localStorage.getItem('customerId'),
-    orderItems: localStorage.getItem('cart'),
-  });
+export const createOrder = async (customerId, orderItems) => {
+  try {
+    console.log('Enviando orden:', { customerId, orderItems });
+    const response = await instance.post('/api/orders', 
+      {
+        shippingAddress: "Direccion de envio de ejemplo",
+        billingAddress: "Direccion de facturacion de ejemplo",
+        notes: "Notas de ejemplo",
+        customerId: customerId,
+        orderItems: orderItems,
+    });
+    return { data: response.data, error: null };
+  } catch (error) {
+    console.error('Error createOrder service:', error);
+    return { data: null, error };
+  }
 };

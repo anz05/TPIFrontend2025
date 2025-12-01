@@ -12,4 +12,3 @@ export const getOrders = async (search = null, status = null, pageNumber = 1, pa
     const response = await instance.get(`api/orders?${queryString}`);
     return { dataOrders: response.data, errorOrders: null };
 };
-

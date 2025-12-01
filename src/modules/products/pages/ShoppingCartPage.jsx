@@ -8,6 +8,7 @@ import Input from "../../shared/components/Input";
 import LoginForm from "../../auth/components/LoginForm";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { createOrder } from "../../orders/services/createOrder";
 
 function ShoppingCartPage() {
     const navigate = useNavigate();
@@ -120,21 +121,48 @@ function ShoppingCartPage() {
         setIsOpen(true);
     };
 
-    const manageOrder = () => {
+    const manageOrder = async () => {
         const token = localStorage.getItem("token");
-        
+        const customerId = localStorage.getItem("customerId");
+        const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        const orderItems = storedCart.map((item) => ({
+            productId: item.productId,
+            quantity: Number(item.quantity) || 0,
+        }));
+
         if (!token) {
             openLoginModal();
             return;
-        }else{
-            alert(`Orden gestionada. Total a pagar: $${totalPrice}`);
-            
-            setCartItems([]);
-            localStorage.removeItem("cart");
-            navigate("/");
         }
 
-        
+        if (customerId === null) {
+            alert("No es un cliente. Por favor, inicie sesión como cliente.");
+            return;
+        }
+
+        if (orderItems.length === 0) {
+            alert("El carrito está vacío o contiene productos no válidos.");
+            return;
+        }
+
+        try {
+            const { data, error } = await createOrder(customerId, orderItems);
+            if (error) {
+                console.error('Error creating order:', error);
+                alert('Ocurrió un error al crear la orden. Intente de nuevo.');
+                return;
+            }
+            setCartItems([]);
+            localStorage.removeItem('cart');
+            navigate('/');
+        } catch (error) {
+            console.error('Unexpected error creating order:', error);
+            if (error.response && error.response.data) {
+                console.error('Detalles del error 400 del servidor:', error.response.data);
+            }
+            alert('Error inesperado al crear la orden.');
+        }
     };
 
     const redirectToAuth = (path) => {

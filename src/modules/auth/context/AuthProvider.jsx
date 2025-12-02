@@ -25,6 +25,7 @@ function AuthProvider({ children }) {
     localStorage.setItem('token', data.token);
     localStorage.setItem('customerId', data.customerId);
     localStorage.setItem('customerEmail', data.customerEmail);
+    localStorage.setItem('userName', data.userName);
     setIsAuthenticated(true);
     return { error: null };
   };

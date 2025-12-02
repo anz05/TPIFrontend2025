@@ -291,7 +291,7 @@ function ShoppingCartPage() {
             </Modal>
 
             <Modal isOpen={isOpenSuccess} onClose={() => setIsOpenSuccess(false)}>
-                <div className="flex flex-col items-center text-center gap-4 z-99999">
+                <div className="flex flex-col items-center text-center gap-4 z-80">
                     <div className="text-2xl font-bold">Orden realizada</div>
 
                     <div className="flex w-full gap-4 mt-4">

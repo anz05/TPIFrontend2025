@@ -106,8 +106,8 @@ function ListOrdersPage() {
             ? <ResponsiveText>Buscando datos...</ResponsiveText>
             : orders.map(order => (
               <StructuredCard
-                key={order.Guid}
-                className="flex flex-col"
+                key={order.id}
+                className="flex flex-row justify-between hover:bg-gray-50"
                 title={`Orden #${order.id} - ${order.customerName}`}
                 content={
                   <><ResponsiveText as='p'>Estado: {order.status} | Total: ${order.totalAmount}</ResponsiveText>

@@ -3,6 +3,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import useAuth from '../../auth/hook/useAuth';
 import Button from '../../shared/components/Button';
 import ResponsiveText from '../../shared/components/ResponsiveText';
+import UserButton from '../../auth/components/UserButton';
 
 function Dashboard() {
   const [openMenu, setOpenMenu] = useState(false);
@@ -13,7 +14,7 @@ function Dashboard() {
 
   const logout = () => {
     signOut();
-    navigate('/login');
+    navigate('/');
   };
 
   const getLinkStyles = ({ isActive }) => (
@@ -26,9 +27,11 @@ function Dashboard() {
     `
   );
 
-  const renderLogoutButton = (mobile = false) => (
-    <Button className={`${mobile ? 'block w-full sm:hidden' :  'hidden sm:block' }`} onClick={logout}>Cerrar sesión</Button>
-  );
+  const renderUserButton = (mobile = false) => {
+    return (
+      <UserButton className={`${mobile ? 'block w-full sm:hidden' :  'hidden sm:block' }`} />
+    );
+  };
 
   return (
     <div
@@ -56,7 +59,7 @@ function Dashboard() {
         "
       >
         <img src='/logoCompletoEcommerce.png' alt="Logo" width="200" />
-        {renderLogoutButton()}
+        {renderUserButton()}
         <button
           className="
             bg-transparent
@@ -78,11 +81,12 @@ function Dashboard() {
           p-6
           ${openMenu ? 'left-0' : 'left-[-256px]'}
           rounded
-          shadow
+          shadow-2xl
           flex
           flex-col
           justify-between
-
+          z-30
+          transition-all duration-300
           sm:relative
           sm:left-0
         `}
@@ -112,7 +116,7 @@ function Dashboard() {
           </ul>
           <hr className='opacity-15 mt-4' />
         </nav>
-        {renderLogoutButton(true)}
+        {renderUserButton(true)}
       </aside>
       <main
         className="

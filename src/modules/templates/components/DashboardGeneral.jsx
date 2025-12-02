@@ -6,12 +6,11 @@ import ResponsiveText from '../../shared/components/ResponsiveText';
 import Modal from '../../shared/components/Modal';
 import LoginForm from '../../auth/components/LoginForm';
 import RegisterForm from '../../auth/components/RegisterForm';
+import UserButton from '../../auth/components/UserButton';
 
 
 function DashboardGeneral() {
   const [openMenu, setOpenMenu] = useState(false);
-
-  const [loading, setLoading] = useState(false);
 
   const handleSearchSubmit = (e) => {
       e.preventDefault();
@@ -31,13 +30,6 @@ function DashboardGeneral() {
   const [isOpenLogin, setIsOpenLogin] = useState(false);
   const [isOpenSignup, setIsOpenSignup] = useState(false);
 
-  const [showUserMenu, setShowUserMenu] = useState(false);
-
-  const logout = () => {
-    localStorage.clear();
-    navigate('/login');
-  };
-  
   const openLoginModal = () => {
     setIsOpenLogin(true);
   };
@@ -53,10 +45,6 @@ function DashboardGeneral() {
       : ''
     }
     `
-  );
-
-  const renderLogoutButton = () => (
-    <Button onClick={logout}>Cerrar sesión</Button>
   );
   
   const renderAuthButtons = () => {
@@ -82,32 +70,11 @@ function DashboardGeneral() {
       );
     }
 
-    return (
-      <div className="relative">
-        <button
-          className="h-8 w-8 rounded-2xl bg-purple-200 flex items-center justify-center"
-          onClick={() => setShowUserMenu((s) => !s)}
-          aria-expanded={showUserMenu}
-        >
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
-            <g id="SVGRepo_iconCarrier"> <path d="M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="#5d3276" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g>
-          </svg>
-        </button>
-
-        {showUserMenu && (
-          <div className="absolute right-0 mt-2 w-44 bg-white shadow-lg rounded p-2 z-50">
-            <Button className="w-full" onClick={() => { setShowUserMenu(false); logout(); }}>
-              Cerrar sesión
-            </Button>
-          </div>
-        )}
-      </div>
-    );
+    return <UserButton className={'hidden sm:block'} />;
   };
 
   const renderDesktopNavbar = () => (
-    <nav className='hidden sm:flex gap-4'>
+    <nav className='hidden sm:flex gap-4 shadow-2xl px-3 py-2 rounded-lg bg-white'>
       <button 
         onClick={() => navigate('/')}
         className={`
@@ -261,19 +228,20 @@ const renderSearchBar = () => (
           p-6
           ${openMenu ? 'left-0' : 'left-[-256px]'}
           rounded
-          shadow-2xl
+          shadow
           flex
           flex-col
           justify-between
-          z-30
           transition-all duration-300
-
-          sm:hidden // CAMBIO 3: Oculta el aside en pantallas grandes
+          sm:hidden 
         `}
       >
         <nav>
           {renderMobileNavLinks()}
           <hr className='opacity-15 mt-4' />
+            <div className="mt-4">
+              <UserButton className="block w-full sm:hidden" />
+            </div>
         </nav>
         
       </aside>
@@ -292,7 +260,7 @@ const renderSearchBar = () => (
         className="
           p-5
           overflow-y-scroll
-          sm:col-span-1 // CAMBIO 4: Asegura que ocupe la columna completa
+          sm:col-span-1 
         "
       >
         <Outlet />

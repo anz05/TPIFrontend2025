@@ -110,7 +110,7 @@ function ListProductsPage() {
             : products.map(product => (
               <StructuredCard
                 key={product.sku}
-                className="hover:bg-gray-100 p-2"
+                className="hover:bg-gray-50 p-2 flex flex-row justify-between"
                 title={
                   <>
                     {product.sku} - {product.name}
@@ -128,7 +128,7 @@ function ListProductsPage() {
                   </>
                 }
                 actions={
-                  <Button onClick={()=>handleClicked(product.sku)} className="hidden md:block text-xs px-2 py-1">
+                  <Button onClick={()=>handleClicked(product.sku)} className="md:block text-xs px-2 py-1">
                     {!openProductId
                           ? "Ver"
                           : openProductId === product.sku
@@ -137,10 +137,11 @@ function ListProductsPage() {
                       }
                   </Button>
                 }
-                titleClassName="font-bold text-sm"
+                titleClassName={'font-semibold text-xl'}
+                contentClassName={'text-xl'}
               />
-
             ))
+            
         }
       </div>
 

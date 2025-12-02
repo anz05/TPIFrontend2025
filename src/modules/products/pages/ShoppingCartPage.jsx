@@ -274,7 +274,6 @@ function ShoppingCartPage() {
                     <div className="flex w-full gap-4 mt-4">
                         <button
                             onClick={() => {
-                                {console.log('modal abierto')}
                                 setIsOpenSuccess(false);
                                 navigate('/');
                             }}

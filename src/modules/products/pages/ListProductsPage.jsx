@@ -103,19 +103,17 @@ function ListProductsPage() {
         contentClassName={"flex flex-row justify-between"}
         ></StructuredCard>
 
-      <div className='mt-4 flex flex-col gap-0.5'>
+      <div className='mt-4 flex flex-col gap-4'>
         {
           loading
             ?<ResponsiveText>Buscando datos...</ResponsiveText>
             : products.map(product => (
               <StructuredCard
                 key={product.sku}
-                className="hover:bg-gray-50 text-sm p-2"
+                className="hover:bg-gray-100 p-2"
                 title={
                   <>
-                    <span className="font-bold text-base">
-                      {product.sku} - {product.name}
-                    </span>
+                    {product.sku} - {product.name}
                   </>
                 }
                 content={

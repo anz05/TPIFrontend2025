@@ -13,16 +13,17 @@ function DashboardGeneral() {
 
   const [loading, setLoading] = useState(false);
 
-const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    const query = e.target.elements.search.value; 
-    navigate(`/?search=${encodeURIComponent(query)}`); 
-    if (location.pathname !== '/') {
-        navigate(`/?search=${encodeURIComponent(query)}`);
-    } else {
-        navigate({ search: `?search=${encodeURIComponent(query)}` });
-    }
-};
+  const handleSearchSubmit = (e) => {
+      e.preventDefault();
+      const query = e.target.elements.search.value; 
+      navigate(`/?search=${encodeURIComponent(query)}`); 
+      if (location.pathname !== '/') {
+          navigate(`/?search=${encodeURIComponent(query)}`);
+      } else {
+          navigate({ search: `?search=${encodeURIComponent(query)}` });
+      }
+  };
+
   const location = useLocation();
 
   const navigate = useNavigate();
@@ -30,8 +31,13 @@ const handleSearchSubmit = (e) => {
   const [isOpenLogin, setIsOpenLogin] = useState(false);
   const [isOpenSignup, setIsOpenSignup] = useState(false);
 
-  const { singOut } = useAuth();
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
+  const logout = () => {
+    localStorage.clear();
+    navigate('/login');
+  };
+  
   const openLoginModal = () => {
     setIsOpenLogin(true);
   };
@@ -49,22 +55,56 @@ const handleSearchSubmit = (e) => {
     `
   );
 
-  const renderAuthButtons = () => (
-    <div className='hidden sm:flex gap-4'>
-      <Button 
-        className='bg-purple-200 hover:bg-purple-100' 
-        onClick={() => {openLoginModal()}}
-      >
-        Iniciar Sesión
-      </Button>
-      <Button 
-        className='bg-gray-200 hover:bg-gray-100' 
-        onClick={() => {openSignupModal()}}
-      >
-        Registrarse
-      </Button>
-    </div>
+  const renderLogoutButton = () => (
+    <Button onClick={logout}>Cerrar sesión</Button>
   );
+  
+  const renderAuthButtons = () => {
+    const token = localStorage.getItem('token');
+    const isLogged = token && token !== 'null';
+
+    if (!isLogged) {
+      return (
+        <div className='hidden sm:flex gap-4'>
+          <Button
+            className='bg-purple-200 hover:bg-purple-100'
+            onClick={() => openLoginModal()}
+          >
+            Iniciar Sesión
+          </Button>
+          <Button
+            className='bg-gray-200 hover:bg-gray-100'
+            onClick={() => openSignupModal()}
+          >
+            Registrarse
+          </Button>
+        </div>
+      );
+    }
+
+    return (
+      <div className="relative">
+        <button
+          className="h-8 w-8 rounded-2xl bg-purple-200 flex items-center justify-center"
+          onClick={() => setShowUserMenu((s) => !s)}
+          aria-expanded={showUserMenu}
+        >
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
+            <g id="SVGRepo_iconCarrier"> <path d="M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="#5d3276" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g>
+          </svg>
+        </button>
+
+        {showUserMenu && (
+          <div className="absolute right-0 mt-2 w-44 bg-white shadow-lg rounded p-2 z-50">
+            <Button className="w-full" onClick={() => { setShowUserMenu(false); logout(); }}>
+              Cerrar sesión
+            </Button>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   const renderDesktopNavbar = () => (
     <nav className='hidden sm:flex gap-4'>

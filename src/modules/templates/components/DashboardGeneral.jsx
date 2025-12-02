@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import useAuth from '../../auth/hook/useAuth';
 import Button from '../../shared/components/Button';
-import logo from '../../../../public/logoCompletoEcommerce.png';
-import smallLogo from '../../../../public/logoEcommerce1.png';
 import ResponsiveText from '../../shared/components/ResponsiveText';
 import Modal from '../../shared/components/Modal';
 import LoginForm from '../../auth/components/LoginForm';
@@ -176,13 +174,13 @@ const renderSearchBar = () => (
         "
       >
         <img 
-          src={logo} 
+          src="/logoCompletoEcommerce.png"
           alt="Logo" 
           width="200" 
           className='hidden sm:block' 
         />
         <img 
-          src={smallLogo} 
+          src="/logoEcommerce1.png" 
           alt="Small Logo" 
           width="40" 
           className='sm:hidden' 

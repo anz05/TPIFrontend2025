@@ -6,7 +6,7 @@ function Modal({ isOpen, onClose, children }) {
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-            <Card className="relative w-full max-w-lg mx-4 p-6">
+            <Card className="relative w-full max-w-lg mx-4 p-10">
                 <button
                     onClick={onClose}
                     className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"

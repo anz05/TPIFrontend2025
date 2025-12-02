@@ -19,11 +19,11 @@ function ShoppingCartPage() {
     const [isOpenLogin, setIsOpenLogin] = useState(false);
     const [isOpenInfo, setIsOpenInfo] = useState(false);
     const [isOpenSuccess, setIsOpenSuccess] = useState(false);
+
     const queryParams = new URLSearchParams(location.search);
     const urlSearchTerm = queryParams.get('search') || '';
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    //const [modalPedidoCorrecto, setModalPedidoCorrecto] = useState(false);
     const [infoOrden, setInfoOrden] = useState({});
 
     const loadCartFromLocalStorage = useCallback(() => {
@@ -130,10 +130,10 @@ function ShoppingCartPage() {
     const openInfoForm = () => {
         setIsOpenInfo(true);
     }
-    const openSuccessModal=() =>{
+    const openSuccesModal =() =>{
+        console.log('abriendo modal');
         setIsOpenSuccess(true);
     }
-
 
     const manageOrder = async () => {
         const token = localStorage.getItem("token");
@@ -171,68 +171,6 @@ function ShoppingCartPage() {
             customerId: null,
             orderItems: null
         }));
-    };
-
-    const handleOrderSubmission = async (extraInfo) => {
-        setIsSubmitting(true);
-        const customerId = localStorage.getItem("customerId");
-        const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-
-        const orderItems = storedCart.map((item) => ({
-            productId: item.productId,
-            quantity: Number(item.quantity) || 0,
-        }));
-
-        const payload = {
-            shippingAddress: extraInfo.shippingAdress,
-            billingAddress: extraInfo.billingAdress,
-            notes: extraInfo.notes,
-            customerId: customerId,
-            orderItems: orderItems,
-        };
-
-        try {
-            const { error } = await createOrder(
-                payload.customerId, 
-                orderItems, 
-                payload.shippingAddress, 
-                payload.billingAddress, 
-                payload.notes);
-
-            console.log('Order creation response:', { error });
-
-            // if (error) {
-            //     alert('Ocurrió un error al crear la orden. Intente de nuevo.');
-            //     console.error('Error creating order:', error);
-            //     return;
-            // } esto de los errores ya anda todo bien?
-
-            if (error) {
-                setErrorMessage(error.frontendErrorMessage);
-                return;
-            }
-
-            setIsOpenInfo(false);
-            setCartItems([]);
-            localStorage.removeItem('cart');
-
-            setInfoOrden({ message: "¡Orden creada exitosamente!" }); 
-            openSuccessModal();
-
-            // } catch (err) {
-            //     alert('Error inesperado al crear la orden.');
-            //     console.error('Unexpected error creating order:', err);
-            // } 
-        } catch (error) {
-            if (error?.response?.data?.code) {
-                setErrorMessage(frontendErrorMessage[error?.response?.data?.code]);
-            } else {
-                setErrorMessage('Llame a soporte');
-            }
-        }
-        finally {
-            setIsSubmitting(false);
-        }
     };
 
     return (
@@ -316,37 +254,27 @@ function ShoppingCartPage() {
                 </div>
             </Modal>
 
-            <Modal isOpen={isOpenInfo} onClose={() => { if (!isSubmitting) setIsOpenInfo(false); }}>
-                <div className="flex flex-col gap-3">
-                    <ExtraInfoForm
-                        onSubmit={handleOrderSubmission}
-                        onCancel={() => setIsOpenInfo(false)}
-                        isLoading={isSubmitting}
-                    />
-                </div>
+            <Modal isOpen={isOpenInfo} onClose={() => setIsOpenInfo(false)}>
+                <ExtraInfoForm
+                    onCancel={() => setIsOpenInfo(false)}
+                    isLoading={isSubmitting}
+                    onSuccess={() => {
+                        setIsOpenInfo(false);
+                        setCartItems([]);
+                        localStorage.removeItem("cart");
+                        openSuccesModal();  
+                    }}
+                />
             </Modal>
 
-            <Modal isOpen={isOpenSuccess} onClose={() => setIsOpenSuccess(false)}>
+            <Modal isOpen={isOpenSuccess} onClose={() => setIsOpenSuccess(false)}> 
                 <div className="flex flex-col items-center text-center gap-4">
-                    <div className="w-20 h-20 flex items-center justify-center bg-green-100 rounded-full">
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                            className="h-12 w-12 text-green-600"
-                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                    </div>
-
-                    <h2 className="text-2xl font-semibold text-gray-800">
-                        ¡Orden creada exitosamente!
-                    </h2>
-
-                    <p className="text-gray-600">
-                        Tu compra fue registrada correctamente.
-                    </p>
-
+                    <div>modal de exito</div>
+                    
                     <div className="flex w-full gap-4 mt-4">
                         <button
                             onClick={() => {
+                                {console.log('modal abierto')}
                                 setIsOpenSuccess(false);
                                 navigate('/');
                             }}
@@ -357,7 +285,6 @@ function ShoppingCartPage() {
                     </div>
                 </div>
             </Modal>
-
         </div>
     );
 }

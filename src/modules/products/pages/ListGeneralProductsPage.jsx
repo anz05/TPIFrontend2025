@@ -4,8 +4,6 @@ import Button from '../../shared/components/Button';
 import Card from '../../shared/components/Card';
 import CardContent from '../../shared/components/CardContent';
 import { getGeneralProducts } from '../services/list';
-import logo from '../../../../public/logoCompletoEcommerce.png';
-import image from '../../../../public/imageNotFound.svg';
 import Pagination from '../../shared/components/Pagination';
 import StructuredCard from '../../shared/components/StructuredCard';
 import Counter from '../../shared/components/Counter';
@@ -42,11 +40,27 @@ function ListGeneralProductsPage() {
     };
 
     const handleAddToCart = (product) => {
-        const currentCount = selectedQuantities[product.sku] || 0;
+        const currentCount = Number(selectedQuantities[product.sku] ?? 0);
         if (currentCount < 1) {
             setErrors(prev => ({
                 ...prev,
                 [product.sku]: "Debes agregar al menos 1 producto."
+            }));
+            return;
+        }
+
+        if(product.stockQuantity < currentCount){
+            setErrors(prev => ({
+                ...prev,
+                [product.sku]: "No hay suficiente stock"
+            }));
+            return;
+        }
+
+        if(product.stockQuantity == 0){
+            setErrors(prev => ({
+                ...prev,
+                [product.sku]: "No disponible"
             }));
             return;
         }
@@ -109,6 +123,17 @@ function ListGeneralProductsPage() {
     };
 
     useEffect(() => {
+        const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        const quantitiesMap = {};
+        storedCart.forEach(item => {
+            quantitiesMap[item.sku] = item.quantity;
+        });
+
+        setSelectedQuantities(quantitiesMap);
+    }, []);
+
+    useEffect(() => {
         fetchProducts();
     }, [pageSize, pageNumber, urlSearchTerm]);
 
@@ -129,7 +154,7 @@ function ListGeneralProductsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-4 gap-4 p-4">
 
                 {loading ? (
-                    <span>Buscando datos...</span>
+                    <ResponsiveText>Buscando datos...</ResponsiveText>
                 ) : (
                     products.map((product) => (
                         <StructuredCard
@@ -139,7 +164,7 @@ function ListGeneralProductsPage() {
                                 <div className="flex flex-col gap-3">
 
                                     <img
-                                        src={image ?? product.image}
+                                        src={"/imageNotFound.svg"}
                                         alt={product.name}
                                         className="w-full rounded-lg object-cover h-80 sm:h-60 md:h-68"
                                     />
@@ -152,7 +177,7 @@ function ListGeneralProductsPage() {
                                     <div className="flex items-center justify-between">
                                         <Counter
                                             stock={product.stockQuantity}
-                                            count={selectedQuantities[product.sku] || 0}
+                                            initialCount={selectedQuantities[product.sku] || 0}
                                             onCountChange={(count) => handleCountChange(product.sku, count)}
                                         />
 

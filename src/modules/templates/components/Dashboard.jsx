@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import useAuth from '../../auth/hook/useAuth';
 import Button from '../../shared/components/Button';
-import logo from '../../../../public/logoCompletoEcommerce.png';
 import ResponsiveText from '../../shared/components/ResponsiveText';
 
 function Dashboard() {
@@ -56,7 +55,7 @@ function Dashboard() {
           sm:col-span-2
         "
       >
-        <img src={logo} alt="Logo" width="200" />
+        <img src='/logoCompletoEcommerce.png' alt="Logo" width="200" />
         {renderLogoutButton()}
         <button
           className="

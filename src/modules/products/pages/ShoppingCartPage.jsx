@@ -9,7 +9,7 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { createOrder } from "../../orders/services/createOrder";
 import ExtraInfoForm from "../../orders/componentes/ExtraInfoForm";
-import { frontendErrorMessage } from "../../orders/helpers/backendError";
+import confetti from "canvas-confetti";
 
 function ShoppingCartPage() {
     const navigate = useNavigate();
@@ -23,8 +23,6 @@ function ShoppingCartPage() {
     const queryParams = new URLSearchParams(location.search);
     const urlSearchTerm = queryParams.get('search') || '';
     const [isSubmitting, setIsSubmitting] = useState(false);
-
-    const [infoOrden, setInfoOrden] = useState({});
 
     const loadCartFromLocalStorage = useCallback(() => {
         try {
@@ -110,19 +108,9 @@ function ShoppingCartPage() {
         };
     }, [cartItems]);
 
-    if (cartItems.length === 0) {
-        return (
-            <div className="p-4 text-center">
-                <ResponsiveText as="p" className="font-semibold">
-                    Tu carrito está vacío.
-                </ResponsiveText>
+    const isCartyEmpty = filteredCartItems.length === 0;
 
-                <Button className="mt-4" onClick={() => navigate("/")}>
-                    Ir a Comprar
-                </Button>
-            </div>
-        );
-    }
+
 
     const openLoginModal = () => {
         setIsOpenLogin(true);
@@ -130,9 +118,10 @@ function ShoppingCartPage() {
     const openInfoForm = () => {
         setIsOpenInfo(true);
     }
-    const openSuccesModal =() =>{
-        console.log('abriendo modal');
+    const openSuccesModal = () => {
+        console.log('OpenSuccesModal ejecuntadose');
         setIsOpenSuccess(true);
+        console.log('Esperando modal');
     }
 
     const manageOrder = async () => {
@@ -172,86 +161,116 @@ function ShoppingCartPage() {
             orderItems: null
         }));
     };
+    {/*CONFETIS*/}
+    const launchConfetti = () => {
+        const duration = 2 * 1000;
+        const end = Date.now() + duration;
+
+        (function frame() {
+            confetti({
+                particleCount: 5,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+            });
+            confetti({
+                particleCount: 5,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+            });
+
+            if (Date.now() < end) {
+                requestAnimationFrame(frame);
+            }
+        })();
+    };
+
+
+    const isCartEmpty = filteredCartItems.length === 0;
 
     return (
-        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4 pb-28 lg:pb-0">
-            <div className="lg:col-span-2 flex flex-col gap-4 pb-40">
-                {filteredCartItems.map((item) => (
+        <>
+            {isCartEmpty ? (
+                <div className="p-4 text-center">
+                    <ResponsiveText as="p" className="font-semibold">
+                        Tu carrito está vacío.
+                    </ResponsiveText>
+
+                    <Button className="mt-4" onClick={() => navigate("/")}>
+                        Ir a Comprar
+                    </Button>
+                </div>
+            ) : (
+                <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4 pb-28 lg:pb-0">
+                    <div className="lg:col-span-2 flex flex-col gap-4 pb-40">
+                        {filteredCartItems.map((item) => (
+                            <StructuredCard
+                                key={item.sku}
+                                className={""}
+                                title={item.name}
+                                content={
+                                    <div className="flex flex-col text-2xl">
+                                        <ResponsiveText as="p" className="text-gray-600 text-xl gap-1">
+                                            Cantidad de productos: {item.quantity}
+                                        </ResponsiveText>
+
+                                        <ResponsiveText as="p" className="text-gray-600 text-xl gap-1">
+                                            Sub Total: ${((item.quantity || 0) * (item.unitPrice || 0)).toFixed(2)}
+                                        </ResponsiveText>
+
+                                        <div className="flex items-center justify-between gap-1 mt-4">
+                                            <Counter
+                                                initialCount={item.quantity}
+                                                stock={100}
+                                                activeReset={false}
+                                                onCountChange={(count) => handleCounterChange(item.sku, count)}
+                                            />
+
+                                            <Button
+                                                className="bg-purple-200 hover:bg-purple-300 text-black text-sm px-4 py-4 rounded-xl"
+                                                onClick={() => handleRemoveItem(item.sku)}
+                                            >
+                                                Borrar
+                                            </Button>
+                                        </div>
+                                    </div>
+                                }
+                            />
+                        ))}
+                    </div>
+
                     <StructuredCard
-                        key={item.sku}
-                        className={""}
-                        title={item.name}
+                        className="fixed bottom-0 left-0 right-0 sm:static sm:w-full sm:h-[calc(100vh-160px)] sm:top-4 lg:sticky z-20 flex flex-col"
+                        title="Detalle del pedido"
                         content={
-                            <div className="flex flex-col text-2xl">
-
-                                <ResponsiveText as="p" className="text-gray-600 text-xl gap-1">
-                                    Cantidad de productos: {item.quantity}
-                                </ResponsiveText>
-
-                                <ResponsiveText as="p" className="text-gray-600 text-xl gap-1">
-                                    Sub Total: ${((item.quantity || 0) * (item.unitPrice || 0)).toFixed(2)}
-                                </ResponsiveText>
-
-                                <div className="flex items-center justify-between gap-1 mt-4">
-                                    <Counter
-                                        initialCount={item.quantity}
-                                        stock={100}
-                                        activeReset={false}
-                                        onCountChange={(count) => handleCounterChange(item.sku, count)}
-                                    />
-
-                                    <Button
-                                        className="bg-purple-200 hover:bg-purple-300 text-black text-sm px-4 py-4 rounded-xl"
-                                        onClick={() => handleRemoveItem(item.sku)}
-                                    >
-                                        Borrar
-                                    </Button>
-                                </div>
-                            </div>
+                            <>
+                                <ResponsiveText className="text-gray-600 text-xl sm:mt-1">Cantidad total: {totalQuantity}</ResponsiveText>
+                                <ResponsiveText className="text-gray-600 text-xl sm:mt-1">Precio total: ${totalPrice}</ResponsiveText>
+                            </>
                         }
+                        actions={
+                            <>
+                                {errors.customerId && (
+                                    <p className="text-red-600 text-sm mt-2">{errors.customerId}</p>
+                                )}
+
+                                {errors.orderItems && (
+                                    <p className="text-red-600 text-sm mt-2">{errors.orderItems}</p>
+                                )}
+
+                                <Button className="w-full mt-2 font-semibold" onClick={manageOrder}>
+                                    Finalizar compra
+                                </Button>
+                            </>
+                        }
+                        contentClassName={'flex flex-col'}
                     />
-                ))}
-            </div>
-
-            <StructuredCard
-                className="fixed bottom-0 left-0 right-0
-                    sm:static sm:w-full sm:h-[calc(100vh-160px)]
-                    sm:top-4 lg:sticky
-                    z-20
-                    flex flex-col"
-                title="Detalle del pedido"
-                content={
-                    <>
-                        <ResponsiveText className=" text-gray-600 text-xl sm:mt-1">Cantidad total: {totalQuantity}</ResponsiveText>
-                        <ResponsiveText className="text-gray-600 text-xl sm:mt-1">Precio total: ${totalPrice}</ResponsiveText>
-                    </>
-                }
-                actions={
-                    <>
-                        {errors.customerId && (
-                            <p className="text-red-600 text-sm mt-2">
-                                {errors.customerId}
-                            </p>
-                        )}
-
-                        {errors.orderItems && (
-                            <p className="text-red-600 text-sm mt-2">
-                                {errors.orderItems}
-                            </p>
-                        )}
-                        <Button className="w-full mt-2 font-semibold" onClick={manageOrder}>Finalizar compra</Button>
-                    </>
-                }
-                contentClassName={'flex flex-col'}
-
-
-            >
-            </StructuredCard>
+                </div>
+            )}
 
             <Modal isOpen={isOpenLogin} onClose={() => setIsOpenLogin(false)}>
-                <div className="flex flex-col gap-3">
-                    <LoginForm />
-                </div>
+                <LoginForm />
             </Modal>
 
             <Modal isOpen={isOpenInfo} onClose={() => setIsOpenInfo(false)}>
@@ -260,32 +279,37 @@ function ShoppingCartPage() {
                     isLoading={isSubmitting}
                     onSuccess={() => {
                         setIsOpenInfo(false);
+
+                        launchConfetti();
+
+                        openSuccesModal();
+
                         setCartItems([]);
                         localStorage.removeItem("cart");
-                        openSuccesModal();  
                     }}
                 />
             </Modal>
 
-            <Modal isOpen={isOpenSuccess} onClose={() => setIsOpenSuccess(false)}> 
-                <div className="flex flex-col items-center text-center gap-4">
-                    <div>modal de exito</div>
-                    
+            <Modal isOpen={isOpenSuccess} onClose={() => setIsOpenSuccess(false)}>
+                <div className="flex flex-col items-center text-center gap-4 z-99999">
+                    <div className="text-2xl font-bold">Orden realizada</div>
+
                     <div className="flex w-full gap-4 mt-4">
                         <button
                             onClick={() => {
                                 setIsOpenSuccess(false);
                                 navigate('/');
                             }}
-                            className="flex-1 bg-gray-100 hover:bg-gray-200 py-2 rounded-xl font-semibold"
+                            className="bg-purple-200 hover:bg-purple-300 text-black text-xs px-4 py-4 justify-center rounded-xl w-full"
                         >
                             Seguir comprando
                         </button>
                     </div>
                 </div>
             </Modal>
-        </div>
+        </>
     );
+
 }
 
 export default ShoppingCartPage;

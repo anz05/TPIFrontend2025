@@ -74,7 +74,7 @@ function DashboardGeneral() {
   };
 
   const renderDesktopNavbar = () => (
-    <nav className='hidden sm:flex gap-4 shadow-2xl px-3 py-2 rounded-lg bg-white'>
+    <nav className='hidden sm:flex gap-4 px-3 py-2 rounded-lg bg-white'>
       <button 
         onClick={() => navigate('/')}
         className={`
@@ -230,6 +230,7 @@ const renderSearchBar = () => (
           rounded
           shadow
           flex
+          z-40
           flex-col
           justify-between
           transition-all duration-300

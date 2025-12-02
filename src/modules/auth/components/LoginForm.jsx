@@ -15,15 +15,14 @@ function LoginForm() {
   } = useForm({ defaultValues: { username: '', password: '' } });
 
   const navigate = useNavigate();
-
   const { signIn } = useAuth();
 
   const onValid = async (formData) => {
     try {
       const { error } = await signIn(formData.username, formData.password);
+
       if (error) {
         setErrorMessage(error.frontendErrorMessage);
-
         return;
       }
       if (localStorage.getItem('customerId') == "null") {

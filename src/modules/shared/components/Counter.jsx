@@ -76,7 +76,7 @@ function Counter(props) {
           onChange={handleInputChange}
           min="0"
           max={props.stock} 
-          className={`border text-center h-7 w-12 rounded-lg ${hasError ? 'border-red-500' : 'border-gray-200'}`} 
+          className={`border text-center text-sm h-7 w-12 rounded-lg ${hasError ? 'border-red-500' : 'border-gray-200'}`} 
         >
         </input>
 
@@ -101,6 +101,7 @@ function Counter(props) {
       </div> 
       
     </div> 
+      
   );
 };
 

@@ -81,7 +81,7 @@ function Dashboard() {
           p-6
           ${openMenu ? 'left-0' : 'left-[-256px]'}
           rounded
-          shadow-2xl
+          shadow
           flex
           flex-col
           justify-between

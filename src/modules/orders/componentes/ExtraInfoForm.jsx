@@ -92,13 +92,13 @@ function ExtraInfoForm({ onCancel, isLoading, onSuccess }) {
             <div className="flex justify-end gap-3 pt-2">
                 <Button type="button"
                         onClick={onCancel}
-                        className="bg-gray-200 hover:bg-gray-300 text-gray-800"
+                        className="bg-gray-200 hover:bg-gray-300 text-zinc-600"
                         disabled={isLoading}>
                     Cancelar
                 </Button>
 
                 <Button type="submit"
-                        className="bg-purple-600 hover:bg-purple-700 text-white"
+                        className="bg-purple-300 hover:bg-purple-500 hover:text-white text-zinc-600"
                         disabled={isLoading}>
                     {isLoading ? 'Procesando...' : 'Confirmar Orden'}
                 </Button>

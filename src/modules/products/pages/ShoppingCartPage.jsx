@@ -110,8 +110,6 @@ function ShoppingCartPage() {
 
     const isCartyEmpty = filteredCartItems.length === 0;
 
-
-
     const openLoginModal = () => {
         setIsOpenLogin(true);
     };
@@ -119,10 +117,9 @@ function ShoppingCartPage() {
         setIsOpenInfo(true);
     }
     const openSuccesModal = () => {
-        console.log('OpenSuccesModal ejecuntadose');
         setIsOpenSuccess(true);
-        console.log('Esperando modal');
     }
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     const manageOrder = async () => {
         const token = localStorage.getItem("token");
@@ -136,12 +133,14 @@ function ShoppingCartPage() {
 
         if (!token || token.length < 10) {
             setErrors(prev => ({ ...prev, customerId: "Debes iniciar sesión para continuar" }));
+            await delay(1500);
             openLoginModal();
             return;
         }
 
         if (customerId == "null") {
-            setErrors(prev => ({ ...prev, customerId: "No es un cliente válido" }));
+            setErrors(prev => ({ ...prev, customerId: "No es un cliente válido, por favor inicie sesion como cliente" }));
+            await delay(2000);
             openLoginModal();
             return;
         }

@@ -7,7 +7,7 @@ import StructuredCard from '../../shared/components/StructuredCard';
 import Counter from '../../shared/components/Counter';
 import ResponsiveText from '../../shared/components/ResponsiveText';
 import Modal from '../../shared/components/Modal';
-
+import { motion } from "framer-motion";
 
 function ListGeneralProductsPage() {
     const navigate = useNavigate();
@@ -95,7 +95,7 @@ function ListGeneralProductsPage() {
 
             if (error) throw error;
 
-            setTotal(data.totalCount ?? 0);
+            setTotal(data.totalFiltered ?? 0);
             setProducts(data.products ?? []);
         } catch (error) {
             console.error(error);
@@ -139,6 +139,13 @@ function ListGeneralProductsPage() {
                     <ResponsiveText>Buscando datos...</ResponsiveText>
                 ) : (
                     products.map((product) => (
+                        <motion.div
+                            key={product.sku}
+                            initial={{ opacity: 0, y: 40 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, amount: 0.3 }}
+                            transition={{ duration: 0.4, ease: "easeOut"}}
+                        >
                         <StructuredCard
                             key={product.sku}
                             className="p-4" 
@@ -180,6 +187,7 @@ function ListGeneralProductsPage() {
                                 </div>
                             }
                         />
+                        </motion.div>
                     ))
                 )}
 

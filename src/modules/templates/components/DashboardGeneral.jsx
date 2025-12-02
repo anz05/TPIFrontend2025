@@ -29,6 +29,7 @@ function DashboardGeneral() {
   
   const [isOpenLogin, setIsOpenLogin] = useState(false);
   const [isOpenSignup, setIsOpenSignup] = useState(false);
+  const isCustomer = localStorage.getItem("customerId") ? true : false;
 
   const openLoginModal = () => {
     setIsOpenLogin(true);
@@ -253,7 +254,7 @@ const renderSearchBar = () => (
         </Modal>
         <Modal isOpen={isOpenSignup} onClose={() => setIsOpenSignup(false)}>
             <div className="flex flex-col gap-3">
-                <RegisterForm hasRole={false}/>
+                <RegisterForm hasRole={!isCustomer}/>
             </div>
         </Modal>
 

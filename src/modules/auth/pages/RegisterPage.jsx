@@ -1,6 +1,7 @@
 import RegisterForm from '../components/RegisterForm';
 
 function RegisterPage() {
+    const isCustomer = localStorage.getItem("customerId") != 'null' ? true : false;
     return (
     <div className='
         flex
@@ -10,7 +11,7 @@ function RegisterPage() {
         bg-neutral-100
         items-center
     '>
-        <RegisterForm hasRole={true} />
+        <RegisterForm hasRole={!isCustomer} />
     </div>
     );
 }

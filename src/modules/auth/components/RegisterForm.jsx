@@ -17,7 +17,6 @@ function RegisterForm({ hasRole }) {
     const [serverError, setServerError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const customer = localStorage.getItem("customerId");
 
     const [modalOpen, setModalOpen] = useState(false);
     const [createdUserMsg, setCreatedUserMsg] = useState('');
@@ -27,7 +26,6 @@ function RegisterForm({ hasRole }) {
             setServerError('Las contraseñas no coinciden');
             return;
         }
-        if(customer!='null' || customer) hasRole = false; 
         const finalRole = hasRole ? values.role : 'USER';
         try {
             setLoading(true);

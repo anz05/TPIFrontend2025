@@ -7,6 +7,7 @@ import StructuredCard from '../../shared/components/StructuredCard';
 import Pagination from '../../shared/components/Pagination';
 import SelectStatus from '../../shared/components/SelectStatus';
 import SearchBar from '../../shared/components/SearchBar';
+import { motion } from "framer-motion";
 
 const productStatus = {
   ALL: 'all',
@@ -108,39 +109,49 @@ function ListProductsPage() {
           loading
             ?<ResponsiveText>Buscando datos...</ResponsiveText>
             : products.map(product => (
-              <StructuredCard
-                key={product.sku}
-                className="hover:bg-gray-50 p-2 flex flex-row justify-between"
-                title={
-                  <>
-                    {product.sku} - {product.name}
-                  </>
-                }
-                content={
-                  <>
-                    Stock: {product.stockQuantity} – {product.isActive ? 'Activado' : 'Desactivado'} 
-                    
-                    {openProductId === product.sku && 
-                    <div> 
-                      Precio: ${product.currentUnitPrice}
-                    </div>
-                    }
-                  </>
-                }
-                actions={
-                  <Button onClick={()=>handleClicked(product.sku)} className="md:block text-xs px-2 py-1">
-                    {!openProductId
-                          ? "Ver"
-                          : openProductId === product.sku
-                            ? "Ocultar"
-                            : "Ver"
+                <motion.div
+                  key={product.sku}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.4, ease: "easeOut"}}
+                >
+                  <StructuredCard
+                  key={product.sku}
+                  className="hover:bg-gray-50 p-2 flex flex-row justify-between"
+                  title={
+                    <>
+                      {product.sku} - {product.name}
+                    </>
+                  }
+                  content={
+                    <>
+                      Stock: {product.stockQuantity} – {product.isActive ? 'Activado' : 'Desactivado'} 
+                      
+                      {openProductId === product.sku && 
+                      <div> 
+                        Precio: ${product.currentUnitPrice}
+                      </div>
                       }
-                  </Button>
-                }
-                titleClassName={'font-semibold text-xl'}
-                contentClassName={'text-xl'}
-              />
-            ))
+                    </>
+                  }
+                  actions={
+                    <Button onClick={()=>handleClicked(product.sku)} className="md:block text-xs px-2 py-1">
+                      {!openProductId
+                            ? "Ver"
+                            : openProductId === product.sku
+                              ? "Ocultar"
+                              : "Ver"
+                        }
+                    </Button>
+                  }
+                  titleClassName={'font-semibold text-xl'}
+                  contentClassName={'text-xl'}
+                
+                />
+              </motion.div>))
+              
+              
             
         }
       </div>

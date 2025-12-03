@@ -4,6 +4,7 @@ import useAuth from '../../auth/hook/useAuth';
 import Button from '../../shared/components/Button';
 import ResponsiveText from '../../shared/components/ResponsiveText';
 import UserButton from '../../auth/components/UserButton';
+import LogoButton from '../../shared/components/LogoButton';
 
 function Dashboard() {
   const [openMenu, setOpenMenu] = useState(false);
@@ -58,7 +59,7 @@ function Dashboard() {
           sm:col-span-2
         "
       >
-        <img src='/logoCompletoEcommerce.png' alt="Logo" width="200" />
+        <LogoButton />
         {renderUserButton()}
         <button
           className="

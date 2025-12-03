@@ -7,6 +7,7 @@ import { createProduct } from '../services/create';
 import { useState } from 'react';
 import { frontendErrorMessage } from '../helpers/backendError';
 import ResponsiveText from '../../shared/components/ResponsiveText';
+import SuccessModal from '../../shared/components/SuccessModal';
 
 function CreateProductForm() {
   const {
@@ -14,6 +15,7 @@ function CreateProductForm() {
     formState: { errors },
     handleSubmit,
   } = useForm({
+    mode: "onChange", 
     defaultValues: {
       sku: '',
       cui: '',
@@ -22,11 +24,15 @@ function CreateProductForm() {
       price: 0,
       stock: 0,
     },
-    resetOptions: { keepDirtyValues: false , keepErrors: true },
   });
 
   const [errorBackendMessage, setErrorBackendMessage] = useState('');
+  const [isOpenSuccess, setIsOpenSuccess] = useState(false);
   const navigate = useNavigate();
+
+  const handleSuccessConfirm = () => {
+    navigate('/admin/products');
+  };
 
   const onValid = async (formData) => {
     
@@ -41,7 +47,7 @@ function CreateProductForm() {
     };
       
       await createProduct(payload);
-      navigate('/admin/products');
+      setIsOpenSuccess(true);
     } catch (error) {
       if (error.response?.data?.detail) {
         const errorMessage = frontendErrorMessage[error.response.data.code];
@@ -115,6 +121,13 @@ function CreateProductForm() {
           <Button type='submit' className='w-full sm:w-fit'>Crear Producto</Button>
         </div>
         {errorBackendMessage && <ResponsiveText as='p' className='text-red-500 text-lg'>{errorBackendMessage}</ResponsiveText>}
+        <SuccessModal
+          isOpen={isOpenSuccess}
+          onClose={() => setIsOpenSuccess(false)}
+          successText="Producto creado correctamente"
+          onConfirm={handleSuccessConfirm}
+          showConfetti={true}
+        />
       </form>
     </Card>
   );

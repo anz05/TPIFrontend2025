@@ -14,6 +14,7 @@ function ExtraInfoForm({ onCancel, isLoading, onSuccess }) {
         formState: { errors },
         handleSubmit,
     } = useForm({
+        mode: "onChange", 
         defaultValues: {
             shippingAdress: '',
             billingAdress: '',

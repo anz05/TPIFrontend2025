@@ -5,10 +5,9 @@ import Input from '../../shared/components/Input';
 import Button from '../../shared/components/Button';
 import { register as registerService } from '../services/register';
 import { frontendErrorMessage } from '../helpers/backendError';
-import Card from '../../shared/components/Card';
-import Modal from '../../shared/components/Modal';
 import ResponsiveText from '../../shared/components/ResponsiveText';
 import StructuredCard from '../../shared/components/StructuredCard';
+import SuccessModal from '../../shared/components/SuccessModal';
 
 function RegisterForm({ hasRole }) {
     const { register, handleSubmit, watch, reset, formState: { errors } } = useForm({
@@ -18,14 +17,18 @@ function RegisterForm({ hasRole }) {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const [modalOpen, setModalOpen] = useState(false);
-    const [createdUserMsg, setCreatedUserMsg] = useState('');
+    const [isOpenSuccess, setIsOpenSuccess] = useState(false);
+
+    const handleSuccessConfirm = () => {
+        navigate('/login');
+    };
 
     const onSubmit = async (values) => {
         if (values.password !== values.confirmPassword) {
             setServerError('Las contraseñas no coinciden');
             return;
         }
+        const customer = localStorage.getItem('customerId')
         if(customer!='null' || customer) hasRole = false; 
         const finalRole = hasRole ? values.role : 'USER';
         try {
@@ -40,8 +43,7 @@ function RegisterForm({ hasRole }) {
                 setServerError(error);
                 return;
             }
-            setCreatedUserMsg(data || 'Usuario creado correctamente');
-            setModalOpen(true);
+            setIsOpenSuccess(true);
             reset();
         } catch (err) {
             console.error(err);
@@ -133,29 +135,13 @@ function RegisterForm({ hasRole }) {
                         </Button>
                         <Button variant='secondary' onClick={()=>navigate('/login')}>Iniciar sesion</Button>
                         {serverError && <ResponsiveText as='p' className="text-red-500 text-lg">{serverError}</ResponsiveText>}
-                        <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
-                            <div className="flex flex-col items-center gap-4">
-                                <ResponsiveText as='h2' className="text-xl font-semibold text-center">
-                                    {createdUserMsg}
-                                </ResponsiveText>
-                                <ResponsiveText as='p' className="text-gray-600 text-center text-lg">
-                                    Tu cuenta ha sido creada exitosamente.
-                                </ResponsiveText>
-                                <div className="flex flex-col w-full gap-3 mt-2">
-                                    <Button
-                                        onClick={() => navigate('/login')}
-                                    >
-                                        Iniciar sesión
-                                    </Button>
-                                    <Button
-                                        variant='secondary'
-                                        onClick={() => navigate('/')}
-                                    >
-                                        Salir
-                                    </Button>
-                                </div>
-                            </div>
-                        </Modal>
+                        <SuccessModal
+                            isOpen={isOpenSuccess}
+                            onClose={() => setIsOpenSuccess(false)}
+                            successText="Usuario creado correctamente"
+                            onConfirm={handleSuccessConfirm}
+                            showConfetti={true}
+                        />
                     </>
                 )}
                 contentClassName="flex flex-col gap-4" 

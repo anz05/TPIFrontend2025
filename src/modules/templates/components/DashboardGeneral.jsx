@@ -8,6 +8,7 @@ import LoginForm from '../../auth/components/LoginForm';
 import RegisterForm from '../../auth/components/RegisterForm';
 import UserButton from '../../auth/components/UserButton';
 import SearchBar from '../../shared/components/SearchBar';
+import LogoButton from '../../shared/components/LogoButton';
 
 function DashboardGeneral() {
   const [openMenu, setOpenMenu] = useState(false);
@@ -153,7 +154,7 @@ function DashboardGeneral() {
           gap-4
         "
       >
-        <img 
+        {/* <img 
           src="/logoCompletoEcommerce.png"
           alt="Logo" 
           width="200" 
@@ -164,8 +165,8 @@ function DashboardGeneral() {
           alt="Small Logo" 
           width="40" 
           className='sm:hidden' 
-        />
-
+        /> */}
+        <LogoButton />
         {renderDesktopNavbar()}
 
         <div className='flex-grow sm:flex-grow-0'>

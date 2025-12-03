@@ -118,7 +118,7 @@ function ListProductsPage() {
                 >
                   <StructuredCard
                   key={product.sku}
-                  className="hover:bg-gray-50 p-2 flex flex-row justify-between"
+                  className="hover:bg-gray-50 p-2 flex flex-row justify-between items-center"
                   title={
                     <>
                       {product.sku} - {product.name}
@@ -129,7 +129,7 @@ function ListProductsPage() {
                       Stock: {product.stockQuantity} – {product.isActive ? 'Activado' : 'Desactivado'} 
                       
                       {openProductId === product.sku && 
-                      <div> 
+                      <div className='mt-2.5 pt-2 border-t-1 border-dashed'> 
                         Precio: ${product.currentUnitPrice}
                       </div>
                       }

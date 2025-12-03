@@ -48,6 +48,8 @@ const frontendErrorMessage = {
   'app-10':'Operación no permitida.',
   'order-11': 'Ocurrio un error de aplicacion en el sistema de ordenes.',
   'app-11': 'Ocurrio un error de aplicacion en el sistema.',
+  'order-39': 'El campo de orden debe ser un numero, por favor reingrese',
+  'app-39': 'El campo debe ser un numero, por favor reingrese'
 };
 
 export {

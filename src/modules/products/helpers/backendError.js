@@ -26,6 +26,7 @@ const frontendErrorMessage = {
   'product-08': 'No se encontro productos.',
   'product-10':'Operación no permitida para el producto.',
   'product-11': 'Ocurrio un error de aplicacion en el sistema de productos.',
+  'product-39': 'El campo de producto debe ser un numero, por favor reingrese',
   'app-03': 'Los campos no pueden estar vacíos.',
   'app-18': 'El campo solo debe estar compuesto por letras y numeros, por favor reingrese.',
   'app-19': 'El campo solo debe estar compuesto por letras, simbolos y numeros, por favor reingrese.',
@@ -47,6 +48,7 @@ const frontendErrorMessage = {
   'app-08': 'No se encontro el resultado.',
   'app-10':'Operación no permitida.',
   'app-11': 'Ocurrio un error de aplicacion en el sistema.',
+  'app-39': 'El campo debe ser un numero, por favor reingrese',
 };
 
 export {

@@ -133,7 +133,7 @@ function ListGeneralProductsPage() {
 
     return (
         <div>
-            <div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-4 gap-4 p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
 
                 {loading ? (
                     <ResponsiveText>Buscando datos...</ResponsiveText>
@@ -174,7 +174,6 @@ function ListGeneralProductsPage() {
 
                                         <Button 
                                             onClick={() => handleAddToCart(product)}
-                                            className="bg-purple-200 hover:bg-purple-300 text-zinc-600 px-4 py-2 rounded-xl"
                                         >
                                             Agregar
                                         </Button>

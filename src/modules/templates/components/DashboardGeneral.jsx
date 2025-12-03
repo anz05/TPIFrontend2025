@@ -29,7 +29,7 @@ function DashboardGeneral() {
   
   const [isOpenLogin, setIsOpenLogin] = useState(false);
   const [isOpenSignup, setIsOpenSignup] = useState(false);
-  const isCustomer = localStorage.getItem("customerId") ? true : false;
+  const isCustomer = localStorage.getItem("customerId") !='null' ? true : false;
 
   const openLoginModal = () => {
     setIsOpenLogin(true);
@@ -71,35 +71,31 @@ function DashboardGeneral() {
       );
     }
 
-    return <UserButton className={'hidden sm:block'} />;
+    return <UserButton className={'hidden lg:block'} />;
   };
 
   const renderDesktopNavbar = () => (
-    <nav className='hidden sm:flex gap-4 px-3 py-2 rounded-lg bg-white'>
-      <button 
-        onClick={() => navigate('/')}
-        className={`
-          font-medium
-          ${location.pathname === '/' || location.pathname === '/products'
-            ? 'bg-purple-200 hover:bg-purple-100'
-            : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-          }
-        `}
-      >
-        Productos
-      </button>
-      <button 
-        onClick={() => navigate('/cart')}
-        className={`
-          font-medium
-          ${location.pathname === '/cart'
-            ? 'bg-purple-200 hover:bg-purple-100'
-            : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-          }
-        `}
-      >
-        Carrito de compras
-      </button>
+    <nav className='lg:block hidden gap-4 px-3 rounded-lg bg-white'>
+      <div className='flex justify-between gap-5'>
+        <Button 
+          onClick={() => navigate('/')}
+          variant={location.pathname === '/'
+                ? 'default'
+                : 'secondary'
+              }
+        >
+          Productos
+        </Button>
+        <Button 
+          onClick={() => navigate('/cart')}
+          variant={location.pathname === '/cart'
+                ? 'default'
+                : 'secondary'
+              }
+        >
+          Carrito de compras
+        </Button>
+      </div>
     </nav>
   );
 
@@ -141,14 +137,7 @@ const renderSearchBar = () => (
         </NavLink>
       </li>
       <li>
-        <NavLink to='/login' className={getLinkStyles} onClick={() => setOpenMenu(false)}>
-          <ResponsiveText>Iniciar sesión</ResponsiveText>
-        </NavLink>
-      </li>
-      <li>
-        <NavLink to='/signup' className={getLinkStyles} onClick={() => setOpenMenu(false)}>
-          <ResponsiveText>Registrarse</ResponsiveText>
-        </NavLink>
+        {renderAuthButtons()}
       </li>
     </ul>
   );
@@ -207,7 +196,7 @@ const renderSearchBar = () => (
             bg-transparent
             border-none
             shadow-none
-            sm:hidden 
+            lg:hidden 
             text-2xl 
             p-1 
             w-10 
@@ -235,14 +224,14 @@ const renderSearchBar = () => (
           flex-col
           justify-between
           transition-all duration-300
-          sm:hidden 
+          lg:hidden 
         `}
       >
         <nav>
           {renderMobileNavLinks()}
           <hr className='opacity-15 mt-4' />
             <div className="mt-4">
-              <UserButton className="block w-full sm:hidden" />
+              <UserButton className="block w-full lg:hidden" />
             </div>
         </nav>
         
@@ -262,7 +251,6 @@ const renderSearchBar = () => (
         className="
           p-5
           overflow-y-scroll
-          sm:col-span-1 
         "
       >
         <Outlet />

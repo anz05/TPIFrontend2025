@@ -130,34 +130,35 @@ function RegisterForm({ hasRole }) {
                             disabled={loading}>
                             {loading ? 'Creando...' : 'Crear usuario'}
                         </Button>
-                        {serverError && <p className="text-red-500">{serverError}</p>}
+                        <Button variant='secondary' onClick={()=>navigate('/login')}>Iniciar sesion</Button>
+                        {serverError && <ResponsiveText as='p' className="text-red-500 text-lg">{serverError}</ResponsiveText>}
                         <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
                             <div className="flex flex-col items-center gap-4">
-                                <h2 className="text-xl font-semibold text-center">
+                                <ResponsiveText as='h2' className="text-xl font-semibold text-center">
                                     {createdUserMsg}
-                                </h2>
-                                <p className="text-gray-600 text-center">
+                                </ResponsiveText>
+                                <ResponsiveText as='p' className="text-gray-600 text-center text-lg">
                                     Tu cuenta ha sido creada exitosamente.
-                                </p>
+                                </ResponsiveText>
                                 <div className="flex flex-col w-full gap-3 mt-2">
-                                    <button
-                                        className="bg-purple-200 hover:bg-purple-300 text-black text-xm px-3 py-3 rounded-xl"
+                                    <Button
                                         onClick={() => navigate('/login')}
                                     >
                                         Iniciar sesión
-                                    </button>
-                                    <button
-                                        className="w-full border border-gray-300 py-2 rounded-xl hover:bg-gray-100"
+                                    </Button>
+                                    <Button
+                                        variant='secondary'
                                         onClick={() => navigate('/')}
                                     >
                                         Salir
-                                    </button>
+                                    </Button>
                                 </div>
                             </div>
                         </Modal>
                     </>
                 )}
                 contentClassName="flex flex-col gap-4" 
+                actionsClassName="flex flex-col items-center gap-4"
             >
                 
             </StructuredCard>

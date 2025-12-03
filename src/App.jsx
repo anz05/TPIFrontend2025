@@ -34,7 +34,11 @@ function App() {
     },
     {
       path: '/signup',
-      element: <RegisterPage />,
+      element: (
+        <ProtectedRoute>
+          <RegisterPage />
+        </ProtectedRoute>
+      ),
     },
     {
       path: '/admin',

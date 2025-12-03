@@ -107,34 +107,34 @@ function ListOrdersPage() {
             ? <ResponsiveText>Buscando datos...</ResponsiveText>
             : orders.map(order => (
                 <motion.div
-                            key={order.id}
-                            initial={{ opacity: 0, y: 40 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, amount: 0.3 }}
-                            transition={{ duration: 0.4, ease: "easeOut"}}
+                  key={order.id}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 0.4, ease: "easeOut"}}
                 >
-              <StructuredCard
-                key={order.id}
-                className="flex flex-row justify-between hover:bg-gray-50"
-                title={`Orden #${order.id} - ${order.customerName}`}
-                content={
-                  <><ResponsiveText as='p'>Estado: {order.status} | Total: ${order.totalAmount}</ResponsiveText>
-                    {openOrderId === order.id && (
-                      <div className='flex flex-wrap'>
-                        <ol className='p-1'>
-                          <li><ResponsiveText>Fecha: {order.date.slice(0,10)}</ResponsiveText></li>
-                          <li><ResponsiveText>Direccion de entrega: {order.shippingAddress}</ResponsiveText></li>
-                          <li><ResponsiveText>Direccion de facturacion: {order.billingAddress}</ResponsiveText></li>
-                          <li><ResponsiveText>Notas: {order.notes}</ResponsiveText></li>
-                          <li><ResponsiveText>Items:</ResponsiveText></li>
-                          <li>
-                            {order.orderItems?.map((item) => (
-                              <div key={item.productId}>
-                                <ResponsiveText>- {item.name} | {item.quantity}</ResponsiveText>
-                              </div>
-                              ))}
-                          </li>
-                        </ol>
+                  <StructuredCard
+                    key={order.id}
+                    className="flex flex-row justify-between hover:bg-gray-50 items-center"
+                    title={`Orden #${order.id} - ${order.customerName}`}
+                    content={
+                    <><ResponsiveText as='p'>Estado: {order.status} | Total: ${order.totalAmount}</ResponsiveText>
+                      {openOrderId === order.id && (
+                        <div className='flex flex-wrap mt-2.5 pt-2 border-t-1 border-dashed'>
+                          <ol className='p-1'>
+                            <li><ResponsiveText>Fecha: {order.date.slice(0,10)}</ResponsiveText></li>
+                            <li><ResponsiveText>Direccion de entrega: {order.shippingAddress}</ResponsiveText></li>
+                            <li><ResponsiveText>Direccion de facturacion: {order.billingAddress}</ResponsiveText></li>
+                            <li><ResponsiveText>Notas: {order.notes}</ResponsiveText></li>
+                            <li><ResponsiveText>Items:</ResponsiveText></li>
+                            <li>
+                              {order.orderItems?.map((item) => (
+                                <div key={item.productId}>
+                                  <ResponsiveText>- {item.name} | {item.quantity}</ResponsiveText>
+                                </div>
+                                ))}
+                            </li>
+                          </ol>
                       </div>
                     )}
                   </>

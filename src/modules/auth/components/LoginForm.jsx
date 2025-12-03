@@ -5,6 +5,7 @@ import Input from '../../shared/components/Input';
 import Button from '../../shared/components/Button';
 import useAuth from '../hook/useAuth';
 import { frontendErrorMessage } from '../helpers/backendError';
+import ResponsiveText from '../../shared/components/ResponsiveText';
 
 function LoginForm() {
   const [errorMessage, setErrorMessage] = useState('');
@@ -73,7 +74,7 @@ function LoginForm() {
 
         <Button type='submit'>Iniciar Sesión</Button>
         <Button variant='secondary' onClick={() => navigate('/signup')}>Registrar Usuario</Button>
-        {errorMessage && <p className='text-red-500'>{errorMessage}</p>}
+        {errorMessage && <ResponsiveText as='p' className='text-red-500 text-lg'>{errorMessage}</ResponsiveText>}
       </form>
   );
 };

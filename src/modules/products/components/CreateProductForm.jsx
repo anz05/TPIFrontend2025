@@ -6,6 +6,7 @@ import Input from '../../shared/components/Input';
 import { createProduct } from '../services/create';
 import { useState } from 'react';
 import { frontendErrorMessage } from '../helpers/backendError';
+import ResponsiveText from '../../shared/components/ResponsiveText';
 
 function CreateProductForm() {
   const {
@@ -58,10 +59,8 @@ function CreateProductForm() {
         className='
           flex
           flex-col
-          gap-20
+          gap-5
           p-8
-
-          sm:gap-4
         '
         onSubmit={handleSubmit(onValid)}
       >
@@ -93,7 +92,7 @@ function CreateProductForm() {
         <Input
           label='Precio'
           error={errors.price?.message}
-          type='number'
+          type='decimal'
           {...register('price', {
             min: {
               value: 0,
@@ -104,6 +103,7 @@ function CreateProductForm() {
         <Input
           label='Stock'
           error={errors.stock?.message}
+          type='number'
           {...register('stock', {
             min: {
               value: 0,
@@ -114,7 +114,7 @@ function CreateProductForm() {
         <div className='sm:text-end'>
           <Button type='submit' className='w-full sm:w-fit'>Crear Producto</Button>
         </div>
-        {errorBackendMessage && <span className='text-red-500'>{errorBackendMessage}</span>}
+        {errorBackendMessage && <ResponsiveText as='p' className='text-red-500 text-lg'>{errorBackendMessage}</ResponsiveText>}
       </form>
     </Card>
   );

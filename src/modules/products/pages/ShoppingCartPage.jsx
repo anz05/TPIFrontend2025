@@ -8,6 +8,7 @@ import LoginForm from "../../auth/components/LoginForm";
 import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import OrderManager from "../../orders/components/OrderManager";
+import AnimatedCard from "../../shared/components/AnimatedCard";
 
 function ShoppingCartPage() {
     const navigate = useNavigate();
@@ -174,38 +175,39 @@ function ShoppingCartPage() {
                 <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4 pb-28 lg:pb-0">
                     <div className="lg:col-span-2 flex flex-col gap-4 pb-40">
                         {filteredCartItems.map((item) => (
-                            <StructuredCard
-                                key={item.sku}
-                                className={""}
-                                title={item.name}
-                                content={
-                                    <div className="flex flex-col text-2xl">
-                                        <ResponsiveText as="p" className="text-gray-600 text-xl gap-1">
-                                            Cantidad de productos: {item.quantity}
-                                        </ResponsiveText>
+                            <AnimatedCard key={item.sku}>
+                                <StructuredCard
+                                    key={item.sku}
+                                    className={""}
+                                    title={item.name}
+                                    content={
+                                        <div className="flex flex-col text-2xl">
+                                            <ResponsiveText as="p" className="text-gray-600 text-xl gap-1">
+                                                Cantidad de productos: {item.quantity}
+                                            </ResponsiveText>
 
-                                        <ResponsiveText as="p" className="text-gray-600 text-xl gap-1">
-                                            Sub Total: ${((item.quantity || 0) * (item.unitPrice || 0)).toFixed(2)}
-                                        </ResponsiveText>
+                                            <ResponsiveText as="p" className="text-gray-600 text-xl gap-1">
+                                                Sub Total: ${((item.quantity || 0) * (item.unitPrice || 0)).toFixed(2)}
+                                            </ResponsiveText>
 
-                                        <div className="flex items-center justify-between gap-1 mt-4">
-                                            <Counter
-                                                initialCount={item.quantity}
-                                                stock={100}
-                                                activeReset={false}
-                                                onCountChange={(count) => handleCounterChange(item.sku, count)}
-                                            />
+                                            <div className="flex items-center justify-between gap-1 mt-4">
+                                                <Counter
+                                                    initialCount={item.quantity}
+                                                    stock={item.stockQuantity}
+                                                    activeReset={false}
+                                                    onCountChange={(count) => handleCounterChange(item.sku, count)}
+                                                />
+                                                <Button
 
-                                            <Button
-                                                className="bg-purple-200 hover:bg-purple-300 text-black text-sm px-4 py-4 rounded-xl"
-                                                onClick={() => handleRemoveItem(item.sku)}
-                                            >
-                                                Borrar
-                                            </Button>
+                                                    onClick={() => handleRemoveItem(item.sku)}
+                                                >
+                                                    Borrar
+                                                </Button>
+                                            </div>
                                         </div>
-                                    </div>
-                                }
-                            />
+                                    }
+                                />
+                            </AnimatedCard>
                         ))}
                     </div>
 

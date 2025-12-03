@@ -32,10 +32,30 @@ function ListGeneralProductsPage() {
     const urlSearchTerm = queryParams.get('search') || '';
 
     const handleCountChange = (sku, count) => {
+
+        const product = products.find(p => p.sku === sku);
+
         setSelectedQuantities(prev => ({
             ...prev,
             [sku]: count,
         }));
+
+        if (product && count > Number(product.stockQuantity)) {
+            setErrors(prev => ({
+                ...prev,
+                [sku]: `No puedes seleccionar más de ${product.stockQuantity} unidades.`
+            }));
+        } else if (product && count === Number(product.stockQuantity)) {
+            setErrors(prev => ({
+                ...prev,
+                [sku]: `Este es el último producto en stock.`
+            }));
+        } else {
+            setErrors(prev => ({
+                ...prev,
+                [sku]: null
+            }));
+        }
     };
 
     const handleAddToCart = (product) => {
@@ -143,7 +163,7 @@ function ListGeneralProductsPage() {
                         <AnimatedCard key={product.sku}>
                             <StructuredCard
                                 key={product.sku}
-                                className="p-4" 
+                                className="p-4"
                                 title={(
                                     <div className="w-full h-48 rounded-xl flex items-center justify-center overflow-hidden bg-gray-100 mb-3">
                                         <svg width="74px" height="74px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#62516c" strokeWidth="0.2">
@@ -155,7 +175,7 @@ function ListGeneralProductsPage() {
                                         <ResponsiveText as="h2" className="font-semibold text-xl">
                                             {product.name}
                                         </ResponsiveText>
-                                        
+
                                         <ResponsiveText as="p" className="text-sm mt-1 mb-3">
                                             ${product.currentUnitPrice}
                                         </ResponsiveText>
@@ -167,7 +187,7 @@ function ListGeneralProductsPage() {
                                                 onCountChange={(count) => handleCountChange(product.sku, count)}
                                             />
 
-                                            <Button 
+                                            <Button
                                                 onClick={() => handleAddToCart(product)}
                                             >
                                                 Agregar
@@ -183,7 +203,7 @@ function ListGeneralProductsPage() {
                             />
 
                         </AnimatedCard>
-                        
+
                     ))
                 )}
 
@@ -207,7 +227,7 @@ function ListGeneralProductsPage() {
                         {modalInfo.productName}
                     </ResponsiveText>
                 </div>
-                
+
 
                 <div className="flex justify-between gap-3">
                     <Button

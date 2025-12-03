@@ -100,6 +100,12 @@ function CreateProductForm() {
           error={errors.price?.message}
           type='decimal'
           {...register('price', {
+            required: 'Precio es requerido',
+            validate: (val) => {
+              const str = String(val);
+              const regex = /^[0-9]+(\.[0-9]+)?$/;
+              return regex.test(str) || 'Ingrese un número válido (use . como separador decimal)';
+            },
             min: {
               value: 0,
               message: 'No puede tener un precio negativo',
@@ -111,6 +117,12 @@ function CreateProductForm() {
           error={errors.stock?.message}
           type='number'
           {...register('stock', {
+            required: 'Stock es requerido',
+            validate: (val) => {
+              const str = String(val);
+              const regex = /^\d+$/;
+              return regex.test(str) || 'Ingrese un número válido';
+            },
             min: {
               value: 0,
               message: 'No puede tener un stock negativo',

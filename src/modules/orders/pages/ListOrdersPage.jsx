@@ -69,6 +69,8 @@ function ListOrdersPage() {
     await fetchOrders();
   };
 
+  const noOrders = orders.length === 0;
+
   return (
     <div>
       <StructuredCard
@@ -98,8 +100,15 @@ function ListOrdersPage() {
 
         ></StructuredCard>
 
-
-      <div className='mt-4 flex flex-col gap-4'>
+{noOrders ? (
+  <div className="p-4 text-center">
+                    <ResponsiveText as="p" className="font-semibold">
+                        No cuentas con ordenes en tu base de datos.
+                    </ResponsiveText>
+                </div>
+) : 
+(
+  <div className='mt-4 flex flex-col gap-4'>
         {
           loading
             ? <ResponsiveText>Buscando datos...</ResponsiveText>
@@ -150,6 +159,8 @@ function ListOrdersPage() {
             ))
         }
       </div>
+)}
+      
 
       <Pagination
         pageNumber={pageNumber}

@@ -142,16 +142,6 @@ function ListGeneralProductsPage() {
 
     const totalPages = Math.ceil(total / pageSize);
 
-    const getLinkStyles = ({ isActive }) => (
-        `
-        pl-4 w-25 block  pt-4 pb-4 rounded-4xl transition hover:bg-gray-100
-        ${isActive
-            ? 'bg-gray-200 hover:bg-purple-100 '
-            : ''
-        }
-        `
-    );
-
     return (
         <div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">

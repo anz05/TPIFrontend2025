@@ -59,6 +59,8 @@ function ListProductsPage() {
     setOpenProductId(prev => prev === sku ? null : sku);
   };
 
+  const noProducts = products.length === 0;
+
   return (
     <div>
       <StructuredCard
@@ -104,8 +106,19 @@ function ListProductsPage() {
         actionsClassName={"flex flex-row justify-between flex-wrap"}
         contentClassName={"flex flex-row justify-between"}
         ></StructuredCard>
+{noProducts?(
+  <div className="p-4 text-center">
+                    <ResponsiveText as="p" className="font-semibold">
+                        No cuentas con productos en tu base de datos.
+                    </ResponsiveText>
 
-      <div className='mt-4 flex flex-col gap-4'>
+                    <Button className="mt-4" onClick={() => navigate("/admin/products/create")}>
+                        Crear Productos
+                    </Button>
+                </div>
+
+): (
+  <div className='mt-4 flex flex-col gap-4'>
         {
           loading
             ?<ResponsiveText>Buscando datos...</ResponsiveText>
@@ -148,6 +161,8 @@ function ListProductsPage() {
               
         }
       </div>
+)}
+      
 
       <Pagination
         pageNumber={pageNumber}

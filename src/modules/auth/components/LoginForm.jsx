@@ -13,7 +13,7 @@ function LoginForm() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ defaultValues: { username: '', password: '' } });
+  } = useForm({ mode: "onChange", defaultValues: { username: '', password: '' } });
 
   const navigate = useNavigate();
   const { signIn } = useAuth();

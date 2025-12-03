@@ -11,6 +11,7 @@ import SuccessModal from '../../shared/components/SuccessModal';
 
 function RegisterForm({ hasRole }) {
     const { register, handleSubmit, watch, reset, formState: { errors } } = useForm({
+        mode: "onChange", 
         defaultValues: { username: '', email: '', role: 'USER', password: '', confirmPassword: '' }
     });
     const [serverError, setServerError] = useState('');

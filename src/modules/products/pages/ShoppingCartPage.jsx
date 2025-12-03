@@ -212,7 +212,10 @@ function ShoppingCartPage() {
                     </div>
 
                     <StructuredCard
-                        className="fixed bottom-0 left-0 right-0 sm:static sm:w-full sm:h-[calc(100vh-160px)] sm:top-4 lg:sticky z-20 flex flex-col"
+                        className="flex flex-col z-20 
+                                    fixed bottom-0 left-0 right-0 
+                                    w-full lg:h-[calc(100vh-160px)] 
+                                    lg:top-4 lg:sticky"
                         title="Detalle del pedido"
                         content={
                             <>

@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react';
-import Card from '../../shared/components/Card';
 import { getProducts } from '../../products/services/list';
 import { getOrders } from '../../orders/services/list';
 import StructuredCard from '../../shared/components/StructuredCard';
-import CardTitle from '../../shared/components/CardTitle';
-import CardContent from '../../shared/components/CardContent';
+import AnimatedCard from '../../shared/components/AnimatedCard';
 
 function Home() {
-
     const [productsCount, setProductsCount] = useState(null);
     const [ordersCount, setOrdersCount] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -40,22 +37,26 @@ function Home() {
 
     return (
         <div className='flex flex-col gap-3 sm:grid sm:grid-cols-2'>
-            <StructuredCard
+            <AnimatedCard >
+                <StructuredCard
                 title='Productos'
                 content={
                     <p className="text-sm text-gray-500 mt-1">
                         {loading ? 'Cargando...' :`Cantidad de productos: ${productsCount}`}
                     </p>}
-            >
-            </StructuredCard>
-            <StructuredCard
-                title='Órdenes'
-                content={
-                    <p className='text-sm text-gray-500 mt-1'>
-                        {loading ? 'Cargando...' : `Cantidad de ordenes: ${ordersCount}`}
-                    </p>
-                }>
-            </StructuredCard>
+                >
+                </StructuredCard>
+            </AnimatedCard>
+            <AnimatedCard>
+                <StructuredCard
+                    title='Órdenes'
+                    content={
+                        <p className='text-sm text-gray-500 mt-1'>
+                            {loading ? 'Cargando...' : `Cantidad de ordenes: ${ordersCount}`}
+                        </p>
+                    }>
+                </StructuredCard>
+            </AnimatedCard>
         </div>
     );
 }

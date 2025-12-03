@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Button from "../../shared/components/Button";
 import Input from '../../shared/components/Input';
 import { frontendErrorMessage } from '../helpers/backendError';
-import { createOrder } from "../../orders/services/createOrder";
+import { createOrder } from "../services/createOrder";
 
 function ExtraInfoForm({ onCancel, isLoading, onSuccess }) {
 
@@ -22,7 +22,6 @@ function ExtraInfoForm({ onCancel, isLoading, onSuccess }) {
     });
 
     const handleOrderSubmission = async (extraInfo) => {
-
         const customerId = localStorage.getItem("customerId");
         const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -92,13 +91,12 @@ function ExtraInfoForm({ onCancel, isLoading, onSuccess }) {
             <div className="flex justify-end gap-3 pt-2">
                 <Button type="button"
                         onClick={onCancel}
-                        className="bg-gray-200 hover:bg-gray-300 text-zinc-600"
+                        variant='secondary'
                         disabled={isLoading}>
                     Cancelar
                 </Button>
 
                 <Button type="submit"
-                        className="bg-purple-300 hover:bg-purple-500 hover:text-white text-zinc-600"
                         disabled={isLoading}>
                     {isLoading ? 'Procesando...' : 'Confirmar Orden'}
                 </Button>

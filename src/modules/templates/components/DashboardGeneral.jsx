@@ -7,21 +7,10 @@ import Modal from '../../shared/components/Modal';
 import LoginForm from '../../auth/components/LoginForm';
 import RegisterForm from '../../auth/components/RegisterForm';
 import UserButton from '../../auth/components/UserButton';
-
+import SearchBar from '../../shared/components/SearchBar';
 
 function DashboardGeneral() {
   const [openMenu, setOpenMenu] = useState(false);
-
-  const handleSearchSubmit = (e) => {
-      e.preventDefault();
-      const query = e.target.elements.search.value; 
-      navigate(`/?search=${encodeURIComponent(query)}`); 
-      if (location.pathname !== '/') {
-          navigate(`/?search=${encodeURIComponent(query)}`);
-      } else {
-          navigate({ search: `?search=${encodeURIComponent(query)}` });
-      }
-  };
 
   const location = useLocation();
 
@@ -40,7 +29,9 @@ function DashboardGeneral() {
   }
   const getLinkStyles = ({ isActive }) => (
     `
-      pl-4 w-full block  pt-4 pb-4 rounded-4xl transition hover:bg-gray-100
+      pl-5 block pb-4 rounded-4xl transition hover:bg-gray-100
+          sm:pt-6
+          md:pt-6
       ${isActive
       ? 'bg-purple-200 hover:bg-purple-100 '
       : ''
@@ -48,30 +39,33 @@ function DashboardGeneral() {
     `
   );
   
-  const renderAuthButtons = () => {
+  const renderAuthButtons = (isMobile = false) => {
     const token = localStorage.getItem('token');
     const isLogged = token && token !== 'null';
 
     if (!isLogged) {
       return (
-        <div className='hidden sm:flex gap-4'>
+        <div className={isMobile ? 'flex flex-col gap-4' : 'hidden lg:flex gap-4'}>
           <Button
-            className='bg-purple-200 hover:bg-purple-100'
             onClick={() => openLoginModal()}
           >
             Iniciar Sesión
           </Button>
           <Button
-            className='bg-gray-200 hover:bg-gray-100'
+            variant='secondary'
             onClick={() => openSignupModal()}
           >
             Registrarse
           </Button>
         </div>
       );
+    }else{
+      return (
+        <div className={isMobile ? 'flex flex-col gap-4' : 'hidden lg:flex gap-4'}>
+          <UserButton className={`${isMobile ?? 'w-full'}`}/>
+        </div>
+      );
     }
-
-    return <UserButton className={'hidden lg:block'} />;
   };
 
   const renderDesktopNavbar = () => (
@@ -80,68 +74,57 @@ function DashboardGeneral() {
         <Button 
           onClick={() => navigate('/')}
           variant={location.pathname === '/'
-                ? 'default'
-                : 'secondary'
-              }
+            ? 'default'
+            : 'secondary'
+          }
         >
           Productos
         </Button>
         <Button 
           onClick={() => navigate('/cart')}
           variant={location.pathname === '/cart'
-                ? 'default'
-                : 'secondary'
-              }
+            ? 'default'
+            : 'secondary'
+          }
         >
           Carrito de compras
         </Button>
       </div>
     </nav>
   );
-
-const renderSearchBar = () => (
-    <form
-        onSubmit={handleSearchSubmit}
-        className="flex items-center flex-1 mx-3 border border-gray-300 rounded-lg h-9 overflow-hidden"
-    >
-        <input
-            type="text"
-            name="search" 
-            placeholder="Search"
-            className="w-full p-2 outline-none text-gray-700 text-sm"
-            defaultValue={new URLSearchParams(location.search).get('search') || ''} 
-        />
-        <button
-            type="submit"
-            className="bg-white p-2 text-gray-500 hover:text-purple-600 transition h-full"
-        >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-        </button>
-    </form>
-    
-
-);
-
-  const renderMobileNavLinks = () => (
-    <ul className='flex flex-col'>
-      <li>
-        <NavLink to='/' className={getLinkStyles} onClick={() => setOpenMenu(false)}>
-          <ResponsiveText>Productos</ResponsiveText>
-        </NavLink>
-      </li>
-      <li>
-        <NavLink to='/cart' className={getLinkStyles} onClick={() => setOpenMenu(false)}>
-          <ResponsiveText>Carrito de compras</ResponsiveText>
-        </NavLink>
-      </li>
-      <li>
-        {renderAuthButtons()}
-      </li>
-    </ul>
+  const [searchTerm, setSearchTerm] = useState(
+    new URLSearchParams(location.search).get("search") || ""
   );
 
+  const handleSearch = () => {
+    const params = new URLSearchParams(location.search);
+    params.set("search", searchTerm);
+    navigate(`?${params.toString()}`);
+  };
+  const renderSearchBar = () => (
+    <div className="flex items-center ">
+      <SearchBar
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        handleSearch={handleSearch}
+      />
+    </div>
+  );
+
+  const renderMobileNavLinks = () => (
+  <ul className='flex flex-col justify-between'>
+    <li>
+      <NavLink to='/' className={getLinkStyles} onClick={() => setOpenMenu(false)}>
+        <ResponsiveText>Productos</ResponsiveText>
+      </NavLink>
+    </li>
+    <li>
+      <NavLink to='/cart' className={getLinkStyles} onClick={() => setOpenMenu(false)}>
+        <ResponsiveText>Carrito de compras</ResponsiveText>
+      </NavLink>
+    </li>
+  </ul>
+);
 
   return (
     <div
@@ -189,7 +172,7 @@ const renderSearchBar = () => (
           {renderSearchBar()}
         </div>
         
-        {renderAuthButtons()}
+        {renderAuthButtons(false)}
 
         <button
           className="
@@ -229,23 +212,17 @@ const renderSearchBar = () => (
       >
         <nav>
           {renderMobileNavLinks()}
-          <hr className='opacity-15 mt-4' />
-            <div className="mt-4">
-              <UserButton className="block w-full lg:hidden" />
-            </div>
+          <hr className='opacity-20 mt-4 mb-5' />
+            {renderAuthButtons(true)}
         </nav>
         
       </aside>
       <Modal isOpen={isOpenLogin} onClose={() => setIsOpenLogin(false)}>
-            <div className="flex flex-col gap-3">
-                <LoginForm />
-            </div>
-        </Modal>
-        <Modal isOpen={isOpenSignup} onClose={() => setIsOpenSignup(false)}>
-            <div className="flex flex-col gap-3">
-                <RegisterForm hasRole={!isCustomer}/>
-            </div>
-        </Modal>
+        <LoginForm />
+      </Modal>
+      <Modal isOpen={isOpenSignup} onClose={() => setIsOpenSignup(false)}>
+        <RegisterForm hasRole={!isCustomer}/>
+      </Modal>
 
       <main
         className="

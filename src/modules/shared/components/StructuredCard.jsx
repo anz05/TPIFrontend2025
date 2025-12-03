@@ -12,7 +12,7 @@ function StructuredCard({ title, content, actions, className, titleClassName, co
           </ResponsiveText>
         </div>
 
-        <div className={`mb-3 ${contentClassName || ""}`}>
+        <div className={`mb-3 text-lg ${contentClassName || ""}`}>
           {content}
         </div>
       </div>

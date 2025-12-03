@@ -26,6 +26,7 @@ function RegisterForm({ hasRole }) {
             setServerError('Las contraseñas no coinciden');
             return;
         }
+        if(customer!='null' || customer) hasRole = false; 
         const finalRole = hasRole ? values.role : 'USER';
         try {
             setLoading(true);

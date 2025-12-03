@@ -5,20 +5,17 @@ import ResponsiveText from "../../shared/components/ResponsiveText";
 import Modal from "../../shared/components/Modal";
 import Input from "../../shared/components/Input";
 import LoginForm from "../../auth/components/LoginForm";
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { createOrder } from "../../orders/services/createOrder";
-import ExtraInfoForm from "../../orders/componentes/ExtraInfoForm";
-import confetti from "canvas-confetti";
+import OrderManager from "../../orders/components/OrderManager";
 
 function ShoppingCartPage() {
     const navigate = useNavigate();
     const location = useLocation();
+    const orderManagerRef = useRef(null);
     const [errors, setErrors] = useState({});
     const [cartItems, setCartItems] = useState([]);
     const [isOpenLogin, setIsOpenLogin] = useState(false);
-    const [isOpenInfo, setIsOpenInfo] = useState(false);
-    const [isOpenSuccess, setIsOpenSuccess] = useState(false);
 
     const queryParams = new URLSearchParams(location.search);
     const urlSearchTerm = queryParams.get('search') || '';
@@ -108,27 +105,25 @@ function ShoppingCartPage() {
         };
     }, [cartItems]);
 
-    const isCartyEmpty = filteredCartItems.length === 0;
-
     const openLoginModal = () => {
         setIsOpenLogin(true);
     };
-    const openInfoForm = () => {
-        setIsOpenInfo(true);
-    }
-    const openSuccesModal = () => {
-        setIsOpenSuccess(true);
-    }
+
+    const triggerOrder = () => {
+        if (orderManagerRef.current) {
+            orderManagerRef.current.triggerOrder();
+        }
+    };
+
     const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     const manageOrder = async () => {
         const token = localStorage.getItem("token");
         const customerId = localStorage.getItem("customerId");
-        const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-
-        const orderItems = storedCart.map((item) => ({
+        const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+        const orderItems = cartItems.map(item => ({
             productId: item.productId,
-            quantity: Number(item.quantity) || 0,
+            quantity: Number(item.quantity)
         }));
 
         if (!token || token.length < 10) {
@@ -152,40 +147,15 @@ function ShoppingCartPage() {
             }));
             return;
         }
-        openInfoForm();
 
         setErrors(prev => ({
             ...prev,
             customerId: null,
             orderItems: null
         }));
+
+        triggerOrder();
     };
-    {/*CONFETIS*/}
-    const launchConfetti = () => {
-        const duration = 2 * 1000;
-        const end = Date.now() + duration;
-
-        (function frame() {
-            confetti({
-                particleCount: 5,
-                angle: 60,
-                spread: 55,
-                origin: { x: 0 },
-            });
-            confetti({
-                particleCount: 5,
-                angle: 120,
-                spread: 55,
-                origin: { x: 1 },
-            });
-
-            if (Date.now() < end) {
-                requestAnimationFrame(frame);
-            }
-        })();
-    };
-
-
     const isCartEmpty = filteredCartItems.length === 0;
 
     return (
@@ -272,44 +242,17 @@ function ShoppingCartPage() {
                 <LoginForm />
             </Modal>
 
-            <Modal isOpen={isOpenInfo} onClose={() => setIsOpenInfo(false)}>
-                <ExtraInfoForm
-                    onCancel={() => setIsOpenInfo(false)}
-                    isLoading={isSubmitting}
-                    onSuccess={() => {
-                        setIsOpenInfo(false);
-
-                        launchConfetti();
-
-                        openSuccesModal();
-
-                        setCartItems([]);
-                        localStorage.removeItem("cart");
-                    }}
-                />
-            </Modal>
-
-            <Modal isOpen={isOpenSuccess} onClose={() => setIsOpenSuccess(false)}>
-                <div className="flex flex-col items-center text-center gap-4 z-80">
-                    <div className="text-2xl font-bold">Orden realizada</div>
-
-                    <div className="flex w-full gap-4 mt-4">
-                        <button
-                            onClick={() => {
-                                setIsOpenSuccess(false);
-                                navigate('/');
-                            }}
-                            className="bg-purple-200 hover:bg-purple-300 text-black text-xs px-4 py-4 justify-center rounded-xl w-full"
-                        >
-                            Seguir comprando
-                        </button>
-                    </div>
-                </div>
-            </Modal>
+            <OrderManager
+                ref={orderManagerRef}
+                cartItems={cartItems}
+                onSuccess={() => {
+                    setCartItems([]);
+                    navigate("/");
+                }}
+            />
         </>
     );
 
 }
 
 export default ShoppingCartPage;
-

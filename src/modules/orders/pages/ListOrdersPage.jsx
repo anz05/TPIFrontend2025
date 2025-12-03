@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../shared/components/Button';
-import Card from '../../shared/components/Card';
-import CardContent from '../../shared/components/CardContent';
 import { getOrders } from '../services/list';
 import StructuredCard from '../../shared/components/StructuredCard';
 import Pagination from '../../shared/components/Pagination';
 import SearchBar from '../../shared/components/SearchBar';
 import ResponsiveText from '../../shared/components/ResponsiveText';
-import { motion } from "framer-motion";
+import AnimatedCard from '../../shared/components/AnimatedCard';
 
 const orderStatus = {
   ALL: 'all',
@@ -106,13 +104,7 @@ function ListOrdersPage() {
           loading
             ? <ResponsiveText>Buscando datos...</ResponsiveText>
             : orders.map(order => (
-                <motion.div
-                  key={order.id}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{ duration: 0.4, ease: "easeOut"}}
-                >
+                <AnimatedCard key={order.id}>
                   <StructuredCard
                     key={order.id}
                     className="flex flex-row justify-between hover:bg-gray-50 items-center"
@@ -154,7 +146,7 @@ function ListOrdersPage() {
                 titleClassName={'font-semibold text-xl'}
                 contentClassName={'text-xs'}
               ></StructuredCard>
-              </motion.div>
+            </AnimatedCard>
             ))
         }
       </div>

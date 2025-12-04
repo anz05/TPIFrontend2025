@@ -10,7 +10,7 @@ import StructuredCard from '../../shared/components/StructuredCard';
 import SuccessModal from '../../shared/components/SuccessModal';
 
 function RegisterForm({ hasRole }) {
-    const { register, handleSubmit, watch, reset, formState: { errors } } = useForm({
+    const { register, handleSubmit, reset, formState: { errors } } = useForm({
         mode: "onChange", 
         defaultValues: { username: '', email: '', role: 'USER', password: '', confirmPassword: '' }
     });
@@ -67,7 +67,6 @@ function RegisterForm({ hasRole }) {
         <form onSubmit={handleSubmit(onSubmit)} 
             className="flex flex-col gap-4 p-6 mx-auto w-full max-w-sm sm:max-w-md">
             <StructuredCard
-                title={("Registro de usuario")}
                 content={(
                     <>
                         <Input

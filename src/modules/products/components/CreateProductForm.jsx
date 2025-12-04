@@ -75,6 +75,11 @@ function CreateProductForm() {
           error={errors.sku?.message}
           {...register('sku', {
             required: 'SKU es requerido',
+            validate: (val) => {
+              const str = String(val);
+              const regex = /^(0|[1-9]\d*)$/;
+              return regex.test(str) || 'Ingrese un SKU válido (solo se permiten numeros)';
+            }
           })}
         />
         <Input
@@ -82,6 +87,11 @@ function CreateProductForm() {
           error={errors.cui?.message}
           {...register('cui', {
             required: 'Código Único es requerido',
+            validate: (val) => {
+              const str = String(val);
+              const regex = /^(0|[1-9]\d*)$/;
+              return regex.test(str) || 'Ingrese un codigo válido (solo se permiten numeros)';
+            }
           })}
         />
         <Input
@@ -89,11 +99,23 @@ function CreateProductForm() {
           error={errors.name?.message}
           {...register('name', {
             required: 'Nombre es requerido',
+            validate: (val) => {
+              const str = String(val);
+              const regex = /^[A-Za-z0-9\s]+$/;
+              return regex.test(str) || 'Ingrese un nombre válido (no se permiten acentos ni simbolos)';
+            }
           })}
         />
         <Input
           label='Descripción'
-          {...register('description')}
+          error={errors.description?.message}
+          {...register('description', {
+            validate: (val) => {
+              const str = String(val);
+              const regex = /^[a-zA-Z0-9\s,.\-°º#]*$/;
+              return regex.test(str) || 'Ingrese una descripcion válida (no se permiten acentos ni simbolos)';
+            }
+          })}
         />
         <Input
           label='Precio'

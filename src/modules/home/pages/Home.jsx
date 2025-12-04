@@ -25,7 +25,7 @@ function Home() {
             if (!errorOrders) {
                 setOrdersCount(dataOrders.totalCount ?? 0);
             } else {
-                console.error('Error fetching product count', errorOrders);
+                console.error('Error fetching order count', errorOrders);
                 setOrdersCount(null);
             }
 

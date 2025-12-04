@@ -71,9 +71,6 @@ function ListProductsPage() {
                     <ResponsiveText as="p" className="font-semibold">
                         No cuentas con productos en tu base de datos.
                     </ResponsiveText>
-                    <Button className="mt-4" onClick={() => navigate("/admin/products/create")}>
-                        Crear Productos
-                    </Button>
                 </div>
             );
         }

@@ -63,7 +63,7 @@ function DashboardGeneral() {
     }else{
       return (
         <div className={isMobile ? 'flex flex-col gap-4' : 'hidden lg:flex gap-4'}>
-          <UserButton className={`${isMobile ?? 'w-full'}`}/>
+          <UserButton className={`${isMobile ? 'block w-full lg:hidden' :  'hidden md:block' }`}/>
         </div>
       );
     }

@@ -30,7 +30,9 @@ function Dashboard() {
 
   const renderUserButton = (mobile = false) => {
     return (
-      <UserButton className={`${mobile ? 'block w-full sm:hidden' :  'hidden sm:block' }`} />
+      <div className={'gap-10'}>
+        <UserButton className={`${mobile ? 'block w-full lg:hidden' :  'hidden lg:block' }`} />
+      </div>
     );
   };
 
@@ -60,7 +62,7 @@ function Dashboard() {
         "
       >
         <LogoButton />
-        {renderUserButton()}
+          {renderUserButton()}
         <button
           className="
             bg-transparent
@@ -116,8 +118,9 @@ function Dashboard() {
             </li>
           </ul>
           <hr className='opacity-15 mt-4' />
+          {renderUserButton(true)}
         </nav>
-        {renderUserButton(true)}
+        
       </aside>
       <main
         className="

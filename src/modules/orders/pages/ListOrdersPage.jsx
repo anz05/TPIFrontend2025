@@ -1,13 +1,11 @@
 
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Button from '../../shared/components/Button';
 import { getOrders } from '../services/list';
 import StructuredCard from '../../shared/components/StructuredCard';
 import Pagination from '../../shared/components/Pagination';
 import SearchBar from '../../shared/components/SearchBar';
 import ResponsiveText from '../../shared/components/ResponsiveText';
-import AnimatedCard from '../../shared/components/AnimatedCard';
 import ListCard from '../../shared/components/ListCard'
 
 const orderStatus = {

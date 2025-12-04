@@ -117,7 +117,7 @@ function Dashboard() {
               ><ResponsiveText>Ordenes</ResponsiveText></NavLink>
             </li>
           </ul>
-          <hr className='opacity-15 mt-4' />
+          <hr className='opacity-15 mt-4 mb-4' />
           {renderUserButton(true)}
         </nav>
 

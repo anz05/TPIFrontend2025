@@ -141,15 +141,23 @@ function ListGeneralProductsPage() {
     }, [pageSize, pageNumber, urlSearchTerm]);
 
     const totalPages = Math.ceil(total / pageSize);
+    const noProducts = products.length === 0;
 
-    return (
-        <div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+    const renderProducts = ()=>{
+        if (loading) {
+            return <ResponsiveText>Buscando datos...</ResponsiveText>;
+        }
 
-                {loading ? (
-                    <ResponsiveText>Buscando datos...</ResponsiveText>
-                ) : (
-                    products.map((product) => (
+        if (noProducts) {
+            return (
+                <div className="p-4 text-center">
+                    <ResponsiveText as="p" className="font-semibold">
+                        No se encontraron productos.
+                    </ResponsiveText>
+                </div>
+            );
+        }
+        return products.map((product) => (
                         <AnimatedCard key={product.sku}>
                             <StructuredCard
                                 key={product.sku}
@@ -191,13 +199,16 @@ function ListGeneralProductsPage() {
                                     </div>
                                 }
                             />
-
                         </AnimatedCard>
 
                     ))
-                )}
+    };
 
-            </div>
+    return (
+        <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+                {renderProducts()}
+            /</div>
 
             <Pagination
                 pageNumber={pageNumber}

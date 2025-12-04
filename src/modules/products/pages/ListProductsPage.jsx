@@ -7,8 +7,7 @@ import StructuredCard from '../../shared/components/StructuredCard';
 import Pagination from '../../shared/components/Pagination';
 import SelectStatus from '../../shared/components/SelectStatus';
 import SearchBar from '../../shared/components/SearchBar';
-import { motion } from "framer-motion";
-import AnimatedCard from '../../shared/components/AnimatedCard';
+import ListCard from '../../shared/components/ListCard';
 
 const productStatus = {
   ALL: 'all',
@@ -61,6 +60,35 @@ function ListProductsPage() {
 
   const noProducts = products.length === 0;
 
+  const renderProductsList = () => {
+    if (loading) {
+            return <ResponsiveText>Buscando datos...</ResponsiveText>;
+        }
+
+        if (noProducts) {
+            return (
+                <div className="p-4 text-center">
+                    <ResponsiveText as="p" className="font-semibold">
+                        No cuentas con productos en tu base de datos.
+                    </ResponsiveText>
+                    <Button className="mt-4" onClick={() => navigate("/admin/products/create")}>
+                        Crear Productos
+                    </Button>
+                </div>
+            );
+        }
+    return products.map(product =>(
+      <ListCard 
+        key={product.sku} 
+                keyProp={product.sku}
+                openId={openProductId}
+                handleClicked={handleClicked} 
+                title={`${product.sku} - ${product.name}`}
+                closedContent={`Stock: ${product.stockQuantity} - ${product.isActive ? 'Activado' : 'Desactivado'}`} 
+                openedContent={`Precio: ${product.currentUnitPrice}`}
+      />
+    ));
+  }
   return (
     <div>
       <StructuredCard
@@ -106,63 +134,10 @@ function ListProductsPage() {
         actionsClassName={"flex flex-row justify-between flex-wrap"}
         contentClassName={"flex flex-row justify-between"}
         ></StructuredCard>
-{noProducts?(
-  <div className="p-4 text-center">
-                    <ResponsiveText as="p" className="font-semibold">
-                        No cuentas con productos en tu base de datos.
-                    </ResponsiveText>
 
-                    <Button className="mt-4" onClick={() => navigate("/admin/products/create")}>
-                        Crear Productos
-                    </Button>
-                </div>
-
-): (
   <div className='mt-4 flex flex-col gap-4'>
-        {
-          loading
-            ?<ResponsiveText>Buscando datos...</ResponsiveText>
-            : products.map(product => (
-                <AnimatedCard key={product.sku}>
-                  <StructuredCard
-                    key={product.sku}
-                    className="hover:bg-gray-50 p-2 flex flex-row justify-between items-center"
-                    title={
-                    <>
-                      {product.sku} - {product.name}
-                    </>
-                  }
-                  content={
-                    <>
-                      Stock: {product.stockQuantity} – {product.isActive ? 'Activado' : 'Desactivado'} 
-                      
-                      {openProductId === product.sku && 
-                      <div className='mt-2.5 pt-2 border-t-1 border-dashed'> 
-                        Precio: ${product.currentUnitPrice}
-                      </div>
-                      }
-                    </>
-                  }
-                  actions={
-                    <Button onClick={()=>handleClicked(product.sku)} className="md:block text-xs px-2 py-1">
-                      {!openProductId
-                            ? "Ver"
-                            : openProductId === product.sku
-                              ? "Ocultar"
-                              : "Ver"
-                        }
-                    </Button>
-                  }
-                  titleClassName={'font-semibold text-xl'}
-                  contentClassName={'text-xl'}
-                
-                />
-              </AnimatedCard>))
-              
-        }
+        {renderProductsList()}
       </div>
-)}
-      
 
       <Pagination
         pageNumber={pageNumber}

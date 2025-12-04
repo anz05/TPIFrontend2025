@@ -62,33 +62,33 @@ function ListProductsPage() {
 
   const renderProductsList = () => {
     if (loading) {
-            return <ResponsiveText>Buscando datos...</ResponsiveText>;
-        }
+      return <ResponsiveText>Buscando datos...</ResponsiveText>;
+    }
 
-        if (noProducts) {
-            return (
-                <div className="p-4 text-center">
-                    <ResponsiveText as="p" className="font-semibold">
-                        No cuentas con productos en tu base de datos.
-                    </ResponsiveText>
-                </div>
-            );
+    if (noProducts) {
+      return (
+        <div className="p-4 text-center">
+          <ResponsiveText as="p" className="font-semibold">
+            No cuentas con productos en tu base de datos.
+          </ResponsiveText>
+        </div>
+      );
+    }
+    return products.map(product => (
+      <ListCard
+        key={product.sku}
+        keyProp={product.sku}
+        openId={openProductId}
+        handleClicked={handleClicked}
+        title={`${product.sku} - ${product.name}`}
+        closedContent={`Stock: ${product.stockQuantity} - ${product.isActive ? 'Activado' : 'Desactivado'}`}
+        openedContent={
+          <>
+            <li>{`Precio: ${product.currentUnitPrice}`}</li>
+            <li>{`Descripción: ${product.description ? product.description : "-"}`}</li>
+          </>
+
         }
-    return products.map(product =>(
-      <ListCard 
-        key={product.sku} 
-                keyProp={product.sku}
-                openId={openProductId}
-                handleClicked={handleClicked} 
-                title={`${product.sku} - ${product.name}`}
-                closedContent={`Stock: ${product.stockQuantity} - ${product.isActive ? 'Activado' : 'Desactivado'}`} 
-                openedContent={
-                  <>
-                    <li>{`Precio: ${product.currentUnitPrice}`}</li>
-                    <li>{`Descripción: ${product.description ? product.description : "-"}`}</li>
-                  </>
-                  
-                }
       />
     ));
   }
@@ -136,9 +136,9 @@ function ListProductsPage() {
         }
         actionsClassName={"flex flex-row justify-between flex-wrap"}
         contentClassName={"flex flex-row justify-between"}
-        ></StructuredCard>
+      ></StructuredCard>
 
-  <div className='mt-4 flex flex-col gap-4'>
+      <div className='mt-4 flex flex-col gap-4'>
         {renderProductsList()}
       </div>
 

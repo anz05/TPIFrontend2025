@@ -1,10 +1,10 @@
 import Button from "./Button";
 import Input from "./Input";
-import { useState , useEffect } from "react";
+import { useState, useEffect } from "react";
 
 function Counter(props) {
   const [count, setCount] = useState(props.initialCount || 0);
-  const [hasError, setHasError] = useState(false); 
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     if (props.onCountChange) {
@@ -17,13 +17,13 @@ function Counter(props) {
       setCount(props.initialCount);
     }
   }, [props.initialCount]);
-  
+
   const increase = () => {
     if (count < props.stock) {
       setCount(count + 1);
-      setHasError(false); 
+      setHasError(false);
     } else {
-      setHasError(true); 
+      setHasError(true);
     }
   };
 
@@ -41,15 +41,15 @@ function Counter(props) {
 
   const handleInputChange = (event) => {
     const value = parseInt(event.target.value, 10);
-    
+
     if (isNaN(value) || value < 0) {
-      setCount(0); 
+      setCount(0);
       setHasError(false);
-    } 
+    }
     else if (value > props.stock) {
-      setCount(props.stock); 
-      setHasError(true); 
-    } 
+      setCount(props.stock);
+      setHasError(true);
+    }
     else {
       setCount(value);
       setHasError(false);
@@ -59,10 +59,10 @@ function Counter(props) {
   return (
     <div>
       <div className="flex items-center space-x-2">
-        <button 
+        <button
           className='h-7 w-7 rounded-2xl'
           onClick={decrease}
-          disabled={count === 0} 
+          disabled={count === 0}
         >
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
@@ -70,17 +70,17 @@ function Counter(props) {
           </svg>
         </button>
 
-        <input 
+        <input
           type="number"
           value={count}
           onChange={handleInputChange}
           min="0"
-          max={props.stock} 
-          className={`border text-center text-sm h-7 w-12 rounded-lg ${hasError ? 'border-red-500' : 'border-gray-200'}`} 
+          max={props.stock}
+          className={`border text-center text-sm h-7 w-12 rounded-lg ${hasError ? 'border-red-500' : 'border-gray-200'}`}
         >
         </input>
 
-        <button 
+        <button
           className='h-7 w-7 rounded-2xl'
           onClick={increase}
           disabled={count === props.stock}
@@ -92,16 +92,16 @@ function Counter(props) {
         </button>
         {props.activeReset && <Button className="ml-4" onClick={reset}>Borrar</Button>}
         {hasError && (
-          <p className="text-red-500 text-sm mt-2 w-full text-center"> 
+          <p className="text-red-500 text-sm mt-2 w-full text-center">
             Máximo de stock alcanzado
           </p>
         )}
 
         {/* NO ESTA ANDANDO ESTO DE LOS ERRORES */}
-      </div> 
-      
-    </div> 
-      
+      </div>
+
+    </div>
+
   );
 };
 

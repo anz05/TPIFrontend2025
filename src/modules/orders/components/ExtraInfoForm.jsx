@@ -14,7 +14,7 @@ function ExtraInfoForm({ onCancel, isLoading, onSuccess }) {
         formState: { errors },
         handleSubmit,
     } = useForm({
-        mode: "onChange", 
+        mode: "onChange",
         defaultValues: {
             shippingAdress: '',
             billingAdress: '',
@@ -91,14 +91,14 @@ function ExtraInfoForm({ onCancel, isLoading, onSuccess }) {
 
             <div className="flex justify-end gap-3 pt-2">
                 <Button type="button"
-                        onClick={onCancel}
-                        variant='secondary'
-                        disabled={isLoading}>
+                    onClick={onCancel}
+                    variant='secondary'
+                    disabled={isLoading}>
                     Cancelar
                 </Button>
 
                 <Button type="submit"
-                        disabled={isLoading}>
+                    disabled={isLoading}>
                     {isLoading ? 'Procesando...' : 'Confirmar Orden'}
                 </Button>
             </div>

@@ -16,10 +16,10 @@ function DashboardGeneral() {
   const location = useLocation();
 
   const navigate = useNavigate();
-  
+
   const [isOpenLogin, setIsOpenLogin] = useState(false);
   const [isOpenSignup, setIsOpenSignup] = useState(false);
-  const isCustomer = localStorage.getItem("customerId") !='null' ? true : false;
+  const isCustomer = localStorage.getItem("customerId") != 'null' ? true : false;
 
   const openLoginModal = () => {
     setIsOpenLogin(true);
@@ -39,7 +39,7 @@ function DashboardGeneral() {
     }
     `
   );
-  
+
   const renderAuthButtons = (isMobile = false) => {
     const token = localStorage.getItem('token');
     const isLogged = token && token !== 'null';
@@ -60,10 +60,10 @@ function DashboardGeneral() {
           </Button>
         </div>
       );
-    }else{
+    } else {
       return (
         <div className={isMobile ? 'flex flex-col gap-4' : 'hidden lg:flex gap-4'}>
-          <UserButton className={`${isMobile ? 'block w-full lg:hidden' :  'hidden md:block' }`}/>
+          <UserButton className={`${isMobile ? 'block w-full lg:hidden' : 'hidden md:block'}`} />
         </div>
       );
     }
@@ -72,7 +72,7 @@ function DashboardGeneral() {
   const renderDesktopNavbar = () => (
     <nav className='lg:block hidden gap-4 px-3 rounded-lg bg-white'>
       <div className='flex justify-between gap-5'>
-        <Button 
+        <Button
           onClick={() => navigate('/')}
           variant={location.pathname === '/'
             ? 'default'
@@ -81,7 +81,7 @@ function DashboardGeneral() {
         >
           Productos
         </Button>
-        <Button 
+        <Button
           onClick={() => navigate('/cart')}
           variant={location.pathname === '/cart'
             ? 'default'
@@ -113,19 +113,19 @@ function DashboardGeneral() {
   );
 
   const renderMobileNavLinks = () => (
-  <ul className='flex flex-col justify-between'>
-    <li>
-      <NavLink to='/' className={getLinkStyles} onClick={() => setOpenMenu(false)}>
-        <ResponsiveText>Productos</ResponsiveText>
-      </NavLink>
-    </li>
-    <li>
-      <NavLink to='/cart' className={getLinkStyles} onClick={() => setOpenMenu(false)}>
-        <ResponsiveText>Carrito de compras</ResponsiveText>
-      </NavLink>
-    </li>
-  </ul>
-);
+    <ul className='flex flex-col justify-between'>
+      <li>
+        <NavLink to='/' className={getLinkStyles} onClick={() => setOpenMenu(false)}>
+          <ResponsiveText>Productos</ResponsiveText>
+        </NavLink>
+      </li>
+      <li>
+        <NavLink to='/cart' className={getLinkStyles} onClick={() => setOpenMenu(false)}>
+          <ResponsiveText>Carrito de compras</ResponsiveText>
+        </NavLink>
+      </li>
+    </ul>
+  );
 
   return (
     <div
@@ -172,7 +172,7 @@ function DashboardGeneral() {
         <div className='flex-grow sm:flex-grow-0'>
           {renderSearchBar()}
         </div>
-        
+
         {renderAuthButtons(false)}
 
         <button
@@ -188,10 +188,10 @@ function DashboardGeneral() {
           "
           onClick={() => setOpenMenu(!openMenu)}
         >
-          { openMenu ? <span>&#215;</span> : <span>&#9776;</span>}
+          {openMenu ? <span>&#215;</span> : <span>&#9776;</span>}
         </button>
       </header>
-      
+
       <aside
         className={`
           absolute
@@ -214,15 +214,15 @@ function DashboardGeneral() {
         <nav>
           {renderMobileNavLinks()}
           <hr className='opacity-20 mt-4 mb-5' />
-            {renderAuthButtons(true)}
+          {renderAuthButtons(true)}
         </nav>
-        
+
       </aside>
       <Modal isOpen={isOpenLogin} onClose={() => setIsOpenLogin(false)}>
         <LoginForm />
       </Modal>
       <Modal isOpen={isOpenSignup} onClose={() => setIsOpenSignup(false)}>
-        <RegisterForm hasRole={!isCustomer}/>
+        <RegisterForm hasRole={!isCustomer} />
       </Modal>
 
       <main

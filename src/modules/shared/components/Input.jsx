@@ -8,7 +8,7 @@ function Input({ label, error = '', ...restProps }) {
       '
     >
       <ResponsiveText>{label}:</ResponsiveText>
-      <ResponsiveText as='input' className={ error && 'border-red-400' } { ...restProps }/>
+      <ResponsiveText as='input' className={error && 'border-red-400'} {...restProps} />
       {error && <ResponsiveText className="text-red-500 text-base sm:text-xs">{error}</ResponsiveText>}
     </div>
   );

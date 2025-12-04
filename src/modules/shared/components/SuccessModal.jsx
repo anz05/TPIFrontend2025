@@ -49,7 +49,7 @@ function SuccessModal({
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
-        <div className="flex flex-col items-center text-center gap-4">
+        <div className="flex flex-col items-center text-center gap-4 p-5">
             <div className="text-2xl font-bold">{successText}</div>
             <Button onClick={handleClose}>
             Cerrar

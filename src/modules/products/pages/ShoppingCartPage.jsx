@@ -130,6 +130,7 @@ function ShoppingCartPage() {
         if (!token || token.length < 10) {
             setErrors(prev => ({ ...prev, customerId: "Debes iniciar sesión para continuar" }));
             await delay(1500);
+            setErrors(prev => ({ ...prev, customerId: "" }));
             openLoginModal();
             return;
         }
@@ -137,6 +138,7 @@ function ShoppingCartPage() {
         if (customerId == "null") {
             setErrors(prev => ({ ...prev, customerId: "No es un cliente válido, por favor inicie sesion como cliente" }));
             await delay(2000);
+            setErrors(prev => ({ ...prev, customerId: "" }));
             openLoginModal();
             return;
         }
@@ -244,7 +246,7 @@ function ShoppingCartPage() {
             )}
 
             <Modal isOpen={isOpenLogin} onClose={() => setIsOpenLogin(false)}>
-                <LoginForm />
+                <LoginForm modal={true} redirectTo={location.pathname} />
             </Modal>
 
             <OrderManager

@@ -39,7 +39,7 @@ const OrderManager = forwardRef(({ cartItems, onSuccess }, ref) => {
       <SuccessModal
         isOpen={isOpenSuccess}
         onClose={() => setIsOpenSuccess(false)}
-        successText="Orden realizada, muchas gracias por comprar!"
+        successText="Orden realizada, muchas gracias!"
         onConfirm={handleSuccessConfirm}
         showConfetti={true}
       />

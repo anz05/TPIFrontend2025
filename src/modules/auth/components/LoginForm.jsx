@@ -7,7 +7,7 @@ import useAuth from '../hook/useAuth';
 import { frontendErrorMessage } from '../helpers/backendError';
 import ResponsiveText from '../../shared/components/ResponsiveText';
 
-function LoginForm() {
+function LoginForm({modal=false, redirectTo="/"}) {
   const [errorMessage, setErrorMessage] = useState('');
   const {
     register,
@@ -28,7 +28,10 @@ function LoginForm() {
       }
       if (localStorage.getItem('customerId') == "null") {
         navigate('/admin/home');
-      }else{
+      }
+      if (modal === true) {
+        navigate(redirectTo);
+      } else {
         navigate('/');
       }
       

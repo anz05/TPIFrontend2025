@@ -82,7 +82,13 @@ function ListProductsPage() {
                 handleClicked={handleClicked} 
                 title={`${product.sku} - ${product.name}`}
                 closedContent={`Stock: ${product.stockQuantity} - ${product.isActive ? 'Activado' : 'Desactivado'}`} 
-                openedContent={`Precio: ${product.currentUnitPrice}`}
+                openedContent={
+                  <>
+                    <li>{`Precio: ${product.currentUnitPrice}`}</li>
+                    <li>{`Descripción: ${product.description ? product.description : "-"}`}</li>
+                  </>
+                  
+                }
       />
     ));
   }

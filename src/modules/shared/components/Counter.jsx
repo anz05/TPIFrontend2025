@@ -19,12 +19,21 @@ function Counter(props) {
   }, [props.initialCount]);
 
   const increase = () => {
+    /*
+    Number(props.stock);
     if (count < props.stock) {
       setCount(count + 1);
       setHasError(false);
     } else {
       setHasError(true);
+    }*/
+    const maxStock = Number(props.stock);
+    if (!isNaN(maxStock) && count >= maxStock) {
+      setHasError(true);
+      return;
     }
+    setCount(count + 1);
+    setHasError(false);
   };
 
   const decrease = () => {
@@ -41,18 +50,25 @@ function Counter(props) {
 
   const handleInputChange = (event) => {
     const value = parseInt(event.target.value, 10);
-
+    const maxStock = Number(props.stock);
+    
     if (isNaN(value) || value < 0) {
       setCount(0);
       setHasError(false);
-    }
-    else if (value > props.stock) {
-      setCount(props.stock);
+    }else if (!isNaN(maxStock) && value > maxStock) {
+      setCount(maxStock);
       setHasError(true);
     }
     else {
       setCount(value);
       setHasError(false);
+    }
+  };
+
+  const handleKeyDown = (event) => {
+    const maxStock = Number(props.stock);
+    if (event.key === "ArrowUp" && !isNaN(maxStock) && count >= maxStock) {
+      event.preventDefault();
     }
   };
 
@@ -62,7 +78,7 @@ function Counter(props) {
         <button
           className='h-7 w-7 rounded-2xl'
           onClick={decrease}
-          disabled={count === 0}
+          disabled={count <= 0}
         >
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
@@ -74,6 +90,7 @@ function Counter(props) {
           type="number"
           value={count}
           onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
           min="0"
           max={props.stock}
           className={`border text-center text-sm h-7 w-12 rounded-lg ${hasError ? 'border-red-500' : 'border-gray-200'}`}
@@ -83,7 +100,7 @@ function Counter(props) {
         <button
           className='h-7 w-7 rounded-2xl'
           onClick={increase}
-          disabled={count === props.stock}
+          disabled={!isNaN(Number(props.stock)) && count >= Number(props.stock)}
         >
           <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>

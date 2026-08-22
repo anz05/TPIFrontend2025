@@ -52,7 +52,6 @@ function UserButton({ className = '' }){
 
             {showUserMenu && (
                 <div className="absolute right-0 mt-2 w-35 bg-white shadow-xl rounded-lg p-2 z-50 border border-gray-100 origin-top-right animate-fade-in">
-                    
                     {isNotCustomer && (
                         <Button 
                             variant='secondary'
@@ -66,7 +65,7 @@ function UserButton({ className = '' }){
 
                     <Button 
                         variant='secondary' 
-                        onClick={() => { setShowUserMenu(false); logout(); }}
+                        onClick={() => { setShowUserMenu(false); logout();}}
                     >
                         Cerrar sesion
                     </Button>

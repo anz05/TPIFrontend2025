@@ -78,8 +78,8 @@ function ListOrdersPage() {
 
         if (noOrders) {
             return (
-                <div className="p-4 text-center">
-                    <ResponsiveText as="p" className="font-semibold">
+                <div className='p-4 text-center'>
+                    <ResponsiveText as='p' className='font-semibold'>
                         No cuentas con órdenes en tu base de datos.
                     </ResponsiveText>
                 </div>
@@ -102,7 +102,7 @@ function ListOrdersPage() {
                         <li>Notas: {order.notes}</li>
                         <li>Items:</li>
                         {order.orderItems?.map((item) => (
-                            <li key={item.productId} className="ml-4">
+                            <li key={item.productId} className='ml-4'>
                                 - {item.name} | {item.quantity}
                             </li>
                         ))}
@@ -115,8 +115,8 @@ function ListOrdersPage() {
     return (
         <div>
             <StructuredCard
-                className="mb-4 p-4"
-                title="Ordenes"
+                className='mb-4 p-4'
+                title='Ordenes'
                 actions={
                     <>
                         <div
@@ -140,7 +140,7 @@ function ListOrdersPage() {
                         </select>
                     </>
                 }
-                actionsClassName={"flex flex-row justify-between flex-wrap"}
+                actionsClassName={'flex flex-row justify-between flex-wrap'}
             ></StructuredCard>
 
             <div className='mt-4 flex flex-col gap-4'>

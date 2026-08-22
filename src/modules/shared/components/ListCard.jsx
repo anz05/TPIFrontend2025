@@ -1,8 +1,8 @@
 
-import AnimatedCard from "./AnimatedCard";
-import StructuredCard from "./StructuredCard";
-import ResponsiveText from "./ResponsiveText";
-import Button from "./Button";
+import AnimatedCard from './AnimatedCard';
+import StructuredCard from './StructuredCard';
+import ResponsiveText from './ResponsiveText';
+import Button from './Button';
 
 function ListCard({ keyProp, openId, title, closedContent, openedContent, handleClicked }) {
 
@@ -13,13 +13,13 @@ function ListCard({ keyProp, openId, title, closedContent, openedContent, handle
             <AnimatedCard key={keyProp}>
                 <StructuredCard
                     key={keyProp}
-                    className="flex flex-row justify-between hover:bg-gray-50 items-center p-4"
+                    className='flex flex-row justify-between hover:bg-gray-50 items-center p-4'
                     titleClassName='font-semibold text-xl'
                     title={title}
 
                     content={
                         <>
-                            <ResponsiveText as='p' className="text-gray-700">
+                            <ResponsiveText as='p' className='text-gray-700'>
                                 {closedContent}
                             </ResponsiveText>
 
@@ -37,7 +37,7 @@ function ListCard({ keyProp, openId, title, closedContent, openedContent, handle
                             <Button
                                 onClick={() => handleClicked(keyProp)}
                             >
-                                {isOpen ? "Ocultar" : "Ver"}
+                                {isOpen ? 'Ocultar' : 'Ver'}
                             </Button>
                         </>
                     }

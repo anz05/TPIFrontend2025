@@ -67,8 +67,8 @@ function ListProductsPage() {
 
     if (noProducts) {
       return (
-        <div className="p-4 text-center">
-          <ResponsiveText as="p" className="font-semibold">
+        <div className='p-4 text-center'>
+          <ResponsiveText as='p' className='font-semibold'>
             No cuentas con productos en tu base de datos.
           </ResponsiveText>
         </div>
@@ -85,7 +85,7 @@ function ListProductsPage() {
         openedContent={
           <>
             <li>{`Precio: ${product.currentUnitPrice}`}</li>
-            <li>{`Descripción: ${product.description ? product.description : "-"}`}</li>
+            <li>{`Descripción: ${product.description ? product.description : '-'}`}</li>
           </>
 
         }
@@ -95,7 +95,7 @@ function ListProductsPage() {
   return (
     <div>
       <StructuredCard
-        className="mb-4 p-4"
+        className='mb-4 p-4'
         content={
           <>
             <ResponsiveText as="h2" className={'text-2xl font-semibold'}>Productos</ResponsiveText>
@@ -127,15 +127,15 @@ function ListProductsPage() {
               value={status}
               onChange={setStatus}
               options={[
-                { value: productStatus.ALL, label: "Todos" },
-                { value: productStatus.ENABLED, label: "Habilitados" },
-                { value: productStatus.DISABLED, label: "Inhabilitados" }
+                { value: productStatus.ALL, label: 'Todos' },
+                { value: productStatus.ENABLED, label: 'Habilitados' },
+                { value: productStatus.DISABLED, label: 'Inhabilitados' }
               ]}
             />
           </>
         }
-        actionsClassName={"flex flex-row justify-between flex-wrap"}
-        contentClassName={"flex flex-row justify-between"}
+        actionsClassName={'flex flex-row justify-between flex-wrap'}
+        contentClassName={'flex flex-row justify-between'}
       ></StructuredCard>
 
       <div className='mt-4 flex flex-col gap-4'>

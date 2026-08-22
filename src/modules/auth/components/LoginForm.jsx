@@ -26,15 +26,15 @@ function LoginForm({modal=false, redirectTo="/"}) {
         setErrorMessage(error.frontendErrorMessage);
         return;
       }
-      if (localStorage.getItem('customerId') == "null") {
-        navigate('/admin/home');
-      }
       if (modal === true) {
         navigate(redirectTo);
       } else {
         navigate('/');
       }
       
+      if (localStorage.getItem('customerId') == "null") {
+        navigate('/admin/home');
+      }
     } catch (error) {
       if (error?.response?.data?.code) {
         setErrorMessage(frontendErrorMessage[error?.response?.data?.code]);

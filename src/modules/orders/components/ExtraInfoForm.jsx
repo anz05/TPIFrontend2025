@@ -99,7 +99,7 @@ function ExtraInfoForm({ onCancel, isLoading, onSuccess }) {
 
                 <Button type="submit"
                     disabled={isLoading}>
-                    {isLoading ? 'Procesando...' : 'Confirmar Orden'}
+                    {isLoading ? 'Procesando...' : 'Realizar pago'}
                 </Button>
             </div>
         </form>

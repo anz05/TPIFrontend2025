@@ -4,21 +4,17 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default ({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
-  const target = env.VITE_BACKEND_URL || 'http://localhost:7138/';
-  //https://localhost:7138/
+
   return defineConfig({
     server: {
       proxy: {
         '/api': {
-          target,
+          target: env.VITE_BACKEND_URL,
           changeOrigin: true,
-          secure: false,
+          secure: false,  
         },
       },
     },
-    plugins: [
-      react(),
-      tailwindcss(),
-    ],
+    plugins: [react(), tailwindcss()],
   });
 };

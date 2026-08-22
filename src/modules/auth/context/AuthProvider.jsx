@@ -10,21 +10,23 @@ function AuthProvider({ children }) {
     return Boolean(token);
   });
 
-  const singout = () => {
+  const signOut = () => {
     localStorage.clear();
     setIsAuthenticated(false);
   };
 
-  const singin = async (username, password) => {
+  const signIn = async (username, password) => {
     const { data, error } = await login(username, password);
 
     if (error) {
       return { error };
     }
 
-    localStorage.setItem('token', data);
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('customerId', data.customerId);
+    localStorage.setItem('customerEmail', data.customerEmail);
+    localStorage.setItem('userName', data.userName);
     setIsAuthenticated(true);
-
     return { error: null };
   };
 
@@ -32,8 +34,8 @@ function AuthProvider({ children }) {
     <AuthContext.Provider
       value={ {
         isAuthenticated,
-        singin,
-        singout,
+        signIn,
+        signOut,
       } }
     >
       {children}

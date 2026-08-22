@@ -6,6 +6,8 @@ import Input from '../../shared/components/Input';
 import { createProduct } from '../services/create';
 import { useState } from 'react';
 import { frontendErrorMessage } from '../helpers/backendError';
+import ResponsiveText from '../../shared/components/ResponsiveText';
+import SuccessModal from '../../shared/components/SuccessModal';
 
 function CreateProductForm() {
   const {
@@ -13,6 +15,7 @@ function CreateProductForm() {
     formState: { errors },
     handleSubmit,
   } = useForm({
+    mode: "onChange", 
     defaultValues: {
       sku: '',
       cui: '',
@@ -24,13 +27,27 @@ function CreateProductForm() {
   });
 
   const [errorBackendMessage, setErrorBackendMessage] = useState('');
+  const [isOpenSuccess, setIsOpenSuccess] = useState(false);
   const navigate = useNavigate();
 
-  const onValid = async (formData) => {
-    try {
-      await createProduct(formData);
+  const handleSuccessConfirm = () => {
+    navigate('/admin/products');
+  };
 
-      navigate('/admin/products');
+  const onValid = async (formData) => {
+    
+    try {
+    const payload = {
+      sku: `SKU-${formData.sku}`,
+      internalCode: `INT-${formData.cui}`,
+      name: formData.name,
+      description: formData.description,
+      currentUnitPrice: Number(formData.price),
+      stockQuantity: Number(formData.stock),   
+    };
+      
+      await createProduct(payload);
+      setIsOpenSuccess(true);
     } catch (error) {
       if (error.response?.data?.detail) {
         const errorMessage = frontendErrorMessage[error.response.data.code];
@@ -48,10 +65,8 @@ function CreateProductForm() {
         className='
           flex
           flex-col
-          gap-20
+          gap-5
           p-8
-
-          sm:gap-4
         '
         onSubmit={handleSubmit(onValid)}
       >
@@ -60,6 +75,11 @@ function CreateProductForm() {
           error={errors.sku?.message}
           {...register('sku', {
             required: 'SKU es requerido',
+            validate: (val) => {
+              const str = String(val);
+              const regex = /^(0|[1-9]\d*)$/;
+              return regex.test(str) || 'Ingrese un SKU válido (solo se permiten numeros)';
+            }
           })}
         />
         <Input
@@ -67,6 +87,11 @@ function CreateProductForm() {
           error={errors.cui?.message}
           {...register('cui', {
             required: 'Código Único es requerido',
+            validate: (val) => {
+              const str = String(val);
+              const regex = /^(0|[1-9]\d*)$/;
+              return regex.test(str) || 'Ingrese un codigo válido (solo se permiten numeros)';
+            }
           })}
         />
         <Input
@@ -74,17 +99,35 @@ function CreateProductForm() {
           error={errors.name?.message}
           {...register('name', {
             required: 'Nombre es requerido',
+            validate: (val) => {
+              const str = String(val);
+              const regex = /^[A-Za-z0-9\s]+$/;
+              return regex.test(str) || 'Ingrese un nombre válido (no se permiten acentos ni simbolos)';
+            }
           })}
         />
         <Input
           label='Descripción'
-          {...register('description')}
+          error={errors.description?.message}
+          {...register('description', {
+            validate: (val) => {
+              const str = String(val);
+              const regex = /^[a-zA-Z0-9\s,.\-°º#]*$/;
+              return regex.test(str) || 'Ingrese una descripcion válida (no se permiten acentos ni simbolos)';
+            }
+          })}
         />
         <Input
           label='Precio'
           error={errors.price?.message}
-          type='number'
+          type='decimal'
           {...register('price', {
+            required: 'Precio es requerido',
+            validate: (val) => {
+              const str = String(val);
+              const regex = /^[0-9]+(\.[0-9]+)?$/;
+              return regex.test(str) || 'Ingrese un número válido (use . como separador decimal)';
+            },
             min: {
               value: 0,
               message: 'No puede tener un precio negativo',
@@ -94,7 +137,14 @@ function CreateProductForm() {
         <Input
           label='Stock'
           error={errors.stock?.message}
+          type='number'
           {...register('stock', {
+            required: 'Stock es requerido',
+            validate: (val) => {
+              const str = String(val);
+              const regex = /^\d+$/;
+              return regex.test(str) || 'Ingrese un número válido';
+            },
             min: {
               value: 0,
               message: 'No puede tener un stock negativo',
@@ -104,7 +154,14 @@ function CreateProductForm() {
         <div className='sm:text-end'>
           <Button type='submit' className='w-full sm:w-fit'>Crear Producto</Button>
         </div>
-        {errorBackendMessage && <span className='text-red-500'>{errorBackendMessage}</span>}
+        {errorBackendMessage && <ResponsiveText as='p' className='text-red-500 text-lg'>{errorBackendMessage}</ResponsiveText>}
+        <SuccessModal
+          isOpen={isOpenSuccess}
+          onClose={() => setIsOpenSuccess(false)}
+          successText="Producto creado correctamente"
+          onConfirm={handleSuccessConfirm}
+          showConfetti={true}
+        />
       </form>
     </Card>
   );
